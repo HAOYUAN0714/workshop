@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate, createHashRouter, useNavigate } from 'react-router-dom';
-import { checkIsLogin } from '@/api/user' 
+import { Navigate, createHashRouter } from 'react-router-dom';
+import { checkIsLogin } from '@/api/admin/user' 
 
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
@@ -44,8 +44,6 @@ const RouterGuard = ({
                     .find((row) => row.startsWith("hexToken="))
                     ?.split("=")[1] || '';
                 
-                
-
                 const loginSuccess = await checkIsLogin();
                 setIsValidLogin(Boolean(token && loginSuccess)) 
                 setIsLoading(false);

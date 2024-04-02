@@ -1,5 +1,5 @@
-import { getAllProduct } from '@/api/products';
-import { useEffect, useState } from 'react';
+import { getAllProduct } from '@/api/admin/products';
+import { useEffect } from 'react';
 
 const Home = () => {
 
