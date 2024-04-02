@@ -1,4 +1,4 @@
-export interface Product {
+export default interface Product {
     title: string,
     category: string,
     content: string,

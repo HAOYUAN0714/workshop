@@ -1,4 +1,5 @@
-export interface Coupon {
+export default interface Coupon {
+    id?: string,
     title: string,
     is_enabled: number,
     percent: number,

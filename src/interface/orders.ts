@@ -1,4 +1,4 @@
-export interface Orders {
+export default interface Orders {
     create_at: EpochTimeStamp | DOMHighResTimeStamp, // 訂單建立時間
     id: string, // 訂單 ID
     is_paid: Boolean, // 是否已付款

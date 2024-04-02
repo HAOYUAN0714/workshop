@@ -1,4 +1,4 @@
-export interface Article {
+export default interface Article {
     author: string,
     create_at: EpochTimeStamp | DOMHighResTimeStamp, 
     description: string,
