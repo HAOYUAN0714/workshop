@@ -18,25 +18,26 @@ export function login(params: User): Promise<void> {
                 body: JSON.stringify({ username, password }),
             }
         );
+
         const data = await response.json();
 
         const { token, expired } = data;
 
-        if (!token) {
-            return Promise.reject();
+        if (!token || !data.success) {
+            return Promise.reject(data);
         }
 
         document.cookie = `hexToken=${token};expires=${new Date(expired)}`;
 
-        return Promise.resolve();
+        return Promise.resolve(data);
 
     })();
 
 }
 
 
-export function logout (): void {
-    (async () => {
+export function logout(): Promise<void> {
+    return (async () => {
         await fetch(
             `${import.meta.env.VITE_API_URL}/v2/logout`,
             {
@@ -49,6 +50,8 @@ export function logout (): void {
 
         document.cookie = `hexToken=;`;
 
+        return Promise.resolve();
+        
     })(); 
 
 }

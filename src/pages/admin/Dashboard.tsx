@@ -1,5 +1,5 @@
-import { Outlet, Link } from 'react-router-dom'
-
+import { Outlet, Link, useNavigate } from 'react-router-dom'
+import { logout } from '@/api/admin/user';
 
 import {
     Command,
@@ -10,35 +10,32 @@ import {
     CommandList,
 } from "@/components/ui/command"
 
-
 export default function Dashboard() {
+    const navigate = useNavigate();
+
+    const logoutFunc = () => {
+        logout().then(() => {
+            navigate('/login');
+        });
+    }
+
     return (
         <>
-            <nav className='navbar navbar-expand-lg bg-dark'>
-                <div className='container-fluid'>
-                    <p className='text-white mb-0'>HEX EATS 後台管理系統</p>
-                    <button
-                        className='navbar-toggler'
-                        type='button'
-                        data-bs-toggle='collapse'
-                        data-bs-target='#navbarNav'
-                        aria-controls='navbarNav'
-                        aria-expanded='false'
-                        aria-label='Toggle navigation'
-                    >
-                        <span className='navbar-toggler-icon' />
-                    </button>
-                    <div
-                        className='collapse navbar-collapse justify-content-end'
-                        id='navbarNav'
-                    >
-                        <ul className='navbar-nav'>
-                            <li className='nav-item'>
-                                <button type='button' className='btn btn-sm btn-light'>
-                                    登出
-                                </button>
-                            </li>
-                        </ul>
+            <nav id="top-navbar" className="container flex p-4">
+                <div className="navbar-title basis-1/5">
+                    商品後台管理系統
+                </div>
+                <div className="navbar-menu flex grow justify-end">
+                    <div className="navbar-item">
+
+                    </div>
+                    <div className="navbar-item">
+                    
+                    </div>
+                    <div className="navbar-item">
+                        <button className="logout-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={logoutFunc}>
+                            登出
+                        </button>
                     </div>
                 </div>
             </nav>
@@ -52,6 +49,7 @@ export default function Dashboard() {
                         <CommandItem>產品列表</CommandItem>
                         <CommandItem>優惠卷列表</CommandItem>
                         <CommandItem>訂單列表</CommandItem>
+                        <CommandItem>...</CommandItem>
                     </CommandGroup>
                 </CommandList>
             </Command>

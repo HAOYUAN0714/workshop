@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -6,6 +8,11 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+  ],
+  safelist: [ // 避免因為 tailwind 無法在 dom 上找到相關 class 就把這些 class 刪除 , 以確保動態 class 可以被正確的套用
+    {
+      pattern: /(bg|text|border)-(warning|error|success)/,
+    },
   ],
   prefix: "",
   theme: {
@@ -18,6 +25,11 @@ module.exports = {
     },
     extend: {
       colors: {
+        transparent: "transparent",
+        current: "currentColor",
+        warning: "var(--warning)",
+        error: "var(--error)",
+        success: "var(--success)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

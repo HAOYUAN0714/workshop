@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -19,19 +20,20 @@ import AlertDestructive from '@/components/alert/index'
 
 // 使用 zod 定義表單型別與驗證規則
 const loginSchema = z.object({
-    username: z.string().email().min(2, {
-        message: '帳號為電子郵件格式',
-    }),
+    username: z.string().email('帳號為電子郵件格式'),
     password: z.string().min(8, {
         message: '密碼至少為8個字元',
     }),
 });
 
-
-
 export default function Login() {
     const navigate= useNavigate();
 
+    const [alertInfo, setAlertInfo] = useState({
+        alertType: '',
+        message: '',
+    });
+   
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -40,18 +42,49 @@ export default function Login() {
         },
     });
 
-    // 2. Define a submit handler.
+    // 表單提交
     function onSubmit(userInfo: z.infer<typeof loginSchema>) {
         login(userInfo).then(() => {
             navigate('/admin');
+        }).catch((errorInfo) => {
+            const { error = {}, message: statusMessage = '' } = errorInfo;
+
+            const { code = ''} = error;
+
+            let errorMessage = '';
+
+            switch (code) {
+                case 'auth/wrong-password':
+                    errorMessage = ' : 密碼錯誤';
+                    break;
+                case 'auth/user-not-found':
+                    errorMessage = ' : 使用者不存在';
+                    break;
+                default:
+                    errorMessage = '';
+                    break;
+            }
+
+            setAlertInfo({
+                alertType: 'error',
+                message: `${statusMessage}${errorMessage}`,
+            })
         });
-        
+    }
+
+    function onError(errors: any) {
+        console.warn('login errors', errors);
     }
 
     return (
-        <div className="login-page w-full h-screen flex justify-center items-center">
+        <div
+            id="login-page"
+            className="w-full h-screen flex flex-col justify-center items-center mr-auto ml-auto"
+            style={{width: '20rem'}}
+        >
+            <AlertDestructive alertType={alertInfo.alertType} message={alertInfo.message}/>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 p-5' style={{width: '20rem'}}>
+                <form onSubmit={form.handleSubmit(onSubmit, onError)} className='w-full space-y-8 pt-5' >
                     <FormField
                         control={form.control}
                         name='username'
@@ -61,7 +94,9 @@ export default function Login() {
                                 <FormControl>
                                     <Input placeholder='' {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage>
+                                    {form.formState.errors.username && form.formState.errors.username.message}
+                                </FormMessage>
                             </FormItem>
                         )}
                     />
@@ -74,14 +109,15 @@ export default function Login() {
                                 <FormControl>
                                     <Input placeholder='' {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage>
+                                    {form.formState.errors.password && form.formState.errors.password.message}
+                                </FormMessage>
                             </FormItem>
                         )}
                     />
                     <Button type='submit'>Submit</Button>
                 </form>
 
-                {/* <AlertDestructive alertType={'warning'} message={'123123'}/> */}
             </Form>
         </div>
     );
