@@ -5,6 +5,10 @@ import { checkIsLogin } from '@/api/admin/user'
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Dashboard  from './pages/admin/Dashboard';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminCoupons from './pages/admin/AdminCoupons';
+import AdminOrders from './pages/admin/AdminOrders';
+import FullLoading from './components/common/fullLoading';
 
 // 路由守衛
 interface RouterGuardProps {
@@ -60,7 +64,7 @@ const RouterGuard = ({
     //     }
     // }, [isValidLogin])
 
-    if (isLoading) return <div>loading...</div>;
+    if (isLoading) return <FullLoading isLoading={true} />;
 
     if (!isValidLogin) {
         return  <Navigate to={'/login'} replace />;
@@ -88,15 +92,35 @@ const router = createHashRouter([
                 <Dashboard />
             </RouterGuard>
         ),
-    },
-    {
-        // 產品列表
-        path: '/admin/products',
-        element: (
-            <RouterGuard>
-                <Dashboard />
-            </RouterGuard>
-        ),
+        children: [
+            {
+                // 產品列表
+                path: '/admin/products',
+                element: (
+                    <RouterGuard>
+                        <AdminProducts />
+                    </RouterGuard>
+                ),
+            },
+            {
+                // 優惠卷列表
+                path: '/admin/coupons',
+                element: (
+                    <RouterGuard>
+                        <AdminCoupons />
+                    </RouterGuard>
+                ),
+            },
+            {
+                // 訂單列表
+                path: '/admin/orders',
+                element: (
+                    <RouterGuard>
+                        <AdminOrders />
+                    </RouterGuard>
+                ),
+            },
+        ],
     },
     {
         // 登入頁面

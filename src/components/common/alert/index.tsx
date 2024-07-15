@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import AlertIcon from '@/components/alert/alertIcon';
+import AlertIcon from '@/components/common/alert/alertIcon';
 
 interface alertProps {
     title?: string,

@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { login } from '@/api/admin/user';
-import AlertDestructive from '@/components/alert/index'
+import AlertDestructive from '@/components/common/alert/index'
 
 // 使用 zod 定義表單型別與驗證規則
 const loginSchema = z.object({

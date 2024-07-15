@@ -43,8 +43,8 @@ export const deleteProduct = (options: optionProps) => request('admin/product', 
 *  上傳圖片
 *  表單上傳 , 僅限 jpg jpeg png 圖片 , 且檔案大小不得超過 3MB
     <form action="/api/{圖片名稱}/admin/upload" enctype="multipart/form-data"  method="post">
-    <input type="file" name="file-to-upload">
-    <input type="submit" value="Upload">
+        <input type="file" name="file-to-upload">
+        <input type="submit" value="Upload">
     </form> 
 */ 
 export const uploadImg = (options: optionProps) => request('admin/upload', 'POST', options);

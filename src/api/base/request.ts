@@ -20,6 +20,7 @@ const asyncFetch = async (url: string, method: string, options: optionProps = {}
         .split('; ')
         .find((row) => row.startsWith('hexToken='))
         ?.split('=')[1] || '';
+
     // 方法 header
     const fetchOptions: RequestInit | undefined = {
         method,
@@ -28,6 +29,7 @@ const asyncFetch = async (url: string, method: string, options: optionProps = {}
             Authorization: token
         },
     }
+    
     // 如果不是GET方法，則加入body
     if (method !== 'GET') {
         fetchOptions.body = JSON.stringify(params);

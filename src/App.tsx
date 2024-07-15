@@ -1,21 +1,19 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { RouterProvider } from 'react-router-dom'
+import router from './router'
+import { useSelector } from 'react-redux';
+import './index.css'
+import { RootState } from '@/redux/store';
 
-function App() {
-    const [count, setCount] = useState(0)
+export default function App () {
+    const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
 
-    useEffect(() => {
-        (async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/v2/api/${import.meta.env.VITE_API_PATH}/product/all`)
-            const data = await response.json()
-        })()
-    }, [])
+    const themeClass = `router-wrap ${theme}`;
 
     return (
-        <>
-
-        </>
+        <div className={themeClass}>
+            <RouterProvider
+                router={router}
+            />
+        </div>
     )
 }
-
-export default App
