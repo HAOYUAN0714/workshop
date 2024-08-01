@@ -30,6 +30,7 @@ export const createProduct = (options: optionProps) => request('admin/product', 
 /**
 * 更新指定商品
 * @path id | string
+* @body data | object 商品資訊
 */ 
 export const updateProduct = (options: optionProps) => request('admin/product', 'PUT', options);
 
@@ -47,4 +48,4 @@ export const deleteProduct = (options: optionProps) => request('admin/product', 
         <input type="submit" value="Upload">
     </form> 
 */ 
-export const uploadImg = (options: optionProps) => request('admin/upload', 'POST', options);
+export const uploadImg = (options: optionProps) => request('admin/upload', 'POST', { ...options, isFormData: true });

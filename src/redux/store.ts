@@ -1,9 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import userSettingSlice from './userSettingSlice';
+import userSettingSlice from './common/userSettingSlice';
+import alertSlice from './common/alertSlice';
+import loadingSlice from './common/loadingSlice';
 
 export const store = configureStore({
     reducer: {
-        userSettingSlice
+        userSettingSlice,
+        alertSlice,
+        loadingSlice
     }
 })
 

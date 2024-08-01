@@ -20,6 +20,7 @@ module.exports = {
       center: true,
       padding: "2rem",
       screens: {
+        "sm": "320px",
         "md": "768px",
       },
     },

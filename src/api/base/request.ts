@@ -1,12 +1,13 @@
 export interface optionProps {
-  params?: RequestInit;
+  params?: {};
   path?: string;
-  returnType?: 'async' | 'promist';
+  returnType?: 'async' | 'promise';
+  isFormData?: boolean;
 }
 
-// 回傳 await aync 格式的 fetch
-const asyncFetch = async (url: string, method: string, options: optionProps = {}) => {
-    const { params = null, path = '' } = options;
+// 整理請求資料
+const getRequestInfo = (url: string, method: string, options: optionProps) => {
+    const { params = null, path = '', isFormData = false } = options;
 
     const baseUrl = `${import.meta.env.VITE_API_URL}/v2/api/${import.meta.env.VITE_API_PATH}/${url}/${path}`
 
@@ -15,69 +16,54 @@ const asyncFetch = async (url: string, method: string, options: optionProps = {}
         ? baseUrl+ '?' + new URLSearchParams(params as Record<string, string>).toString()
         : baseUrl
 
-    // 解析 cookie token
-    const token = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('hexToken='))
-        ?.split('=')[1] || '';
-
     // 方法 header
     const fetchOptions: RequestInit | undefined = {
         method,
         headers: {
-            'Content-Type': 'application/json',
-            Authorization: token
+            // 解析 cookie token
+            Authorization: document.cookie
+                .split('; ')
+                .find((row) => row.startsWith('hexToken='))
+                ?.split('=')[1] || '',
+            ...(!isFormData && { 'Content-Type':'application/json' }), // 如果是表單上傳，不能設定 Content-Type
         },
     }
     
-    // 如果不是GET方法，則加入body
+    // 如果不是GET方法，則將請求參數加入body
     if (method !== 'GET') {
-        fetchOptions.body = JSON.stringify(params);
+        fetchOptions.body = isFormData
+            ? params as FormData
+            : JSON.stringify(params);
     }
 
-    try {
-        const response = await fetch(apiUrl, fetchOptions);
-
-        if (!response.ok) {
-            throw new Error(`${method} ${apiUrl} : response error`);
-        }
-
-        return response.json();
-    } catch (error) {
-        throw new Error(`${error}`);
-    }
-}
-
-// 回傳 promise 格式的 fetch
-const promiseFetch = (url: string, method: string, options: optionProps = {}) => {
-    const { params = null, path = '' } = options;
-
-    const apiUrl = `${import.meta.env.VITE_API_URL}/v2/api/${import.meta.env.VITE_API_PATH}/${url}/${path}`
-
-    // 解析 cookie token
-    const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("hexToken="))
-        ?.split("=")[1] || '';
-
-    return fetch(apiUrl, {
-        method,
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: token
-        },
-        body: JSON.stringify(params)
-    });
-
+    return { apiUrl, fetchOptions }
 }
 
 // 依照 returnType 回傳 fetch 格式
-const fetchFunc = (url: string, method: string, options: optionProps = {}) =>  {
+const requestFn = (url: string, method: string, options: optionProps = {}) =>  {
+    // const dispatch = useDispatch();
     const { returnType = 'async' } = options;
+    const { apiUrl, fetchOptions } = getRequestInfo(url, method, options);
 
-    return  returnType === 'async'
-        ? asyncFetch(url, method, options)
-        : promiseFetch(url, method, options)
+    // 回傳 await aync 格式的 fetch
+    if (returnType === 'async') {
+        return (async () => {
+            try {
+                const response = await fetch(apiUrl, fetchOptions);
+                
+                if (!response.ok) {
+                    throw new Error(`${method} ${apiUrl} : response error`);
+                }
+
+                return response.json();
+            } catch (error) {
+                throw new Error(`${error}`);
+            }
+        })();
+    }
+
+    // 回傳 promise 格式的 fetch
+    return fetch(apiUrl, fetchOptions);
 }
 
-export default fetchFunc;
+export default requestFn;

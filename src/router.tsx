@@ -64,7 +64,7 @@ const RouterGuard = ({
     //     }
     // }, [isValidLogin])
 
-    if (isLoading) return <FullLoading isLoading={true} />;
+    if (isLoading) return <FullLoading isLoading={isLoading} />;
 
     if (!isValidLogin) {
         return  <Navigate to={'/login'} replace />;

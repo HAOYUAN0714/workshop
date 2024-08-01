@@ -6,14 +6,18 @@ import {
     BookmarkFilledIcon
 } from "@radix-ui/react-icons"
 import { useDispatch, useSelector } from 'react-redux'
+import FullLoading from '@/components/common/fullLoading';
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { RootState } from '@/redux/store';
-import { setTheme } from '@/redux/userSettingSlice';
+import { setTheme } from '@/redux/common/userSettingSlice';
+import { isFullLoading } from '@/redux/common/loadingSlice';
+
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const isLoading = useSelector(isFullLoading);
 
     const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
 
@@ -53,7 +57,8 @@ export default function Dashboard() {
     const linkClass = 'flex justify-center items-center w-full p-4 text-sm';
 
     return (
-        <div id="admin-dashboard" className="min-w-[768px] flex flex-col h-screen bg-background">
+        <div id="admin-dashboard" className="min-w-[1024px] flex flex-col h-screen bg-background">
+            <FullLoading isLoading={isLoading}/>
             <header className="w-full flex flex-none h-16 p-4 bg-header text-header-foreground">
                 <h2 className="flex-none header-title text-lg">
                     商品後台管理系統
