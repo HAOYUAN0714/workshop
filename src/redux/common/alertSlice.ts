@@ -21,13 +21,16 @@ export const alertSlice = createSlice({
     name: 'alert',
     initialState,
     reducers: {
-        updateAlert: (state, action: PayloadAction<alertInfo>) => {
+        addAlert: (state, action: PayloadAction<alertInfo>) => {
             state.alertInfoArray.push(action.payload);
         },
+        removeAlert: (state, action: PayloadAction<string>) => {
+            state.alertInfoArray = state.alertInfoArray.filter((alert) => alert.id !== action.payload);
+        }
     },
 })
 
-export const { updateAlert } = alertSlice.actions;
+export const { addAlert, removeAlert } = alertSlice.actions;
 
 export const alertInfoArray = (state: RootState) => state.alertSlice.alertInfoArray;
 

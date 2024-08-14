@@ -29,8 +29,8 @@ const getRequestInfo = (url: string, method: string, options: optionProps) => {
         },
     }
     
-    // 如果不是GET方法，則將請求參數加入body
-    if (method !== 'GET') {
+    // 如果不是GET方法，則將請求參數加入body , 沒有參數就不加 body
+    if (method !== 'GET' && params) {
         fetchOptions.body = isFormData
             ? params as FormData
             : JSON.stringify(params);
@@ -57,7 +57,9 @@ const requestFn = (url: string, method: string, options: optionProps = {}) =>  {
 
                 return response.json();
             } catch (error) {
-                throw new Error(`${error}`);
+                console.error('requestFn error', error);
+                
+                return new Error(`${method} ${apiUrl} , error: ${error}`);
             }
         })();
     }

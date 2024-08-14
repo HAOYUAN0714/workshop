@@ -11,13 +11,16 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { RootState } from '@/redux/store';
 import { setTheme } from '@/redux/common/userSettingSlice';
-import { isFullLoading } from '@/redux/common/loadingSlice';
-
+import { loadingQueue } from '@/redux/common/loadingSlice';
+import { useState, useEffect } from 'react';
+import { alertInfoArray } from '@/redux/common/alertSlice';
+import AlertDestructive from '@/components/common/alertDestructive';
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const isLoading = useSelector(isFullLoading);
+    const loadingState = useSelector(loadingQueue);
+    const alertList = useSelector(alertInfoArray);
 
     const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
 
@@ -35,6 +38,12 @@ export default function Dashboard() {
             navigate('/login');
         });
     }
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(!!Object.keys(loadingState).length);
+    }, [loadingState])
 
     const sideMenu = [
         {
@@ -58,7 +67,19 @@ export default function Dashboard() {
 
     return (
         <div id="admin-dashboard" className="min-w-[1024px] flex flex-col h-screen bg-background">
-            <FullLoading isLoading={isLoading}/>
+            <div id="top-alert-list" className='z-50 fixed top-1 right-1 w-[275px]'>
+                {alertList.map((alertInfo) => (
+                    <AlertDestructive
+                        id={alertInfo.id}
+                        title={alertInfo.title}
+                        alertType={alertInfo.alertType}
+                        message={alertInfo.message}
+                        key={alertInfo.id}
+                        className='mb-2'
+                    />
+                ))}
+            </div>
+            <FullLoading isLoading={isLoading} />
             <header className="w-full flex flex-none h-16 p-4 bg-header text-header-foreground">
                 <h2 className="flex-none header-title text-lg">
                     商品後台管理系統

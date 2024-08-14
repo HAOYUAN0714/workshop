@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { login } from '@/api/admin/user';
-import AlertDestructive from '@/components/common/alert/index'
+import AlertDestructive from '@/components/common/alertDestructive/index'
 
 // 使用 zod 定義表單型別與驗證規則
 const loginSchema = z.object({
@@ -95,7 +95,7 @@ export default function Login() {
                                     <Input placeholder='' {...field} />
                                 </FormControl>
                                 <FormMessage>
-                                    {form.formState.errors.username && form.formState.errors.username.message}
+                                    { form.formState.errors.username?.message || '' } 
                                 </FormMessage>
                             </FormItem>
                         )}
@@ -110,7 +110,7 @@ export default function Login() {
                                     <Input placeholder='' {...field} />
                                 </FormControl>
                                 <FormMessage>
-                                    {form.formState.errors.password && form.formState.errors.password.message}
+                                    { form.formState.errors.password?.message || '' }
                                 </FormMessage>
                             </FormItem>
                         )}

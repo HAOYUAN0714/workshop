@@ -3,8 +3,8 @@ export default interface Product {
     category: string,
     content: string,
     description: string,
-    id?: string,
-    is_enabled: number, // 是否啟用 , 1: 啟用 , 0: 未啟用
+    id?: string, // 商品 ID , 非已存在的商品不需帶入
+    is_enabled: number | boolean, // 是否啟用 , 1: 啟用 , 0: 未啟用
     origin_price: number, // 原價
     num?: number,
     price: number, // 現價

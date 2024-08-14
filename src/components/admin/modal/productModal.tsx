@@ -1,28 +1,41 @@
 import { useState, useEffect } from "react"
+import { useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form';
 import { Button } from "@/components/ui/button"
+import ConfirmModal from "@/components/common/modal/confirmationModal";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogClose
 } from "@/components/ui/dialog"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from '@/components/ui/form';
 import productInterface from "@/interface/products"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
-import { createProduct, updateProduct, uploadImg } from "@/api/admin/products"
+import { createProduct, updateProduct, uploadImg, deleteProduct } from "@/api/admin/products"
+import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
+
+type modalProductInterface = Partial<productInterface>;
 
 interface modalProps {
+    productId?: string;
     modalTite: string;
     modalDescription?: string;
     modalType?: string;
-    createdProductInfo?: productInterface;
+    createdProductInfo?: modalProductInterface;
     modalTriggerHandler: () => void;
-    // productInfo: productInterface;
+    updateProductList: () => void;
+    alertHandler: (alertType: string, message: string) => void;
 }
 
 export default function ProductModal({
@@ -30,53 +43,67 @@ export default function ProductModal({
     modalDescription = 'Make changes to your profile here. Click save when you\'re done.',
     modalType = '',
     createdProductInfo,
-    modalTriggerHandler
+    modalTriggerHandler,
+    updateProductList,
+    alertHandler
 }: modalProps) {
+    const dispatch = useDispatch();
     // 新增商品初始化資料
-    const initData = {
+    const initProduct = {
         title: '',
         category: '',
-        origin_price: 100,
-        price: 300,
+        origin_price: 300,
+        price: 200,
         unit: '',
         description: '',
         content: '',
-        is_enabled: 1,
         imageUrl: '',
-    }
+        is_enabled: false 
+    } 
 
-    const [productInfo, setProductInfo] = useState({...initData});
+    const [productInfo, setProductInfo] = useState({...initProduct});
+
+    const form = useForm({
+        defaultValues: { ...initProduct },
+        values: productInfo,
+    });
+
+    // 觸發 新增/編輯 商品打開彈窗時，初始化商品資料
+    useEffect(() => {
+        modalType === 'edit'
+            ? setProductInfo({
+                ...initProduct,
+                ...createdProductInfo,
+                is_enabled: Boolean(createdProductInfo?.is_enabled)
+            })
+            : setProductInfo({...initProduct});
+    }, [modalType]);
 
     // 表單各編輯項目事件處理
     const handleChange = (e: React.SyntheticEvent) => {
-        const { value, name, checked } = (e.target as HTMLInputElement);
-
-        let updateValue = null;
-
-        switch (name) {
-            case 'price':
-            case 'origin_price':
-                updateValue = Number(value);
-                break;
-            case 'is_enabled':
-                updateValue = +checked;
-                break;
-            default:
-                updateValue = value;
-                break;
-        }
+        const { value, name } = (e.target as HTMLInputElement);
 
         setProductInfo({
             ...productInfo,
-            [name]: updateValue,
+            [name]: name === 'price' || name === 'origin_price'
+                ? Number(value)
+                : value
         });
     };
 
+    const handleCheck = (checked: boolean) => {
+        setProductInfo({
+            ...productInfo,
+            is_enabled: checked,
+        });
+    }
+
     // 上傳圖片 , 圖片上傳成功後 , 更新圖片網址
     const handleFileUpload = async (e: React.SyntheticEvent) => {
-        const { files = [] } = (e.target as HTMLInputElement);
+        const loadingKey = new Date().getTime().toString();
+        dispatch(addLoading(loadingKey));
 
-        console.log('e.target', e.target)
+        const { files = [] } = (e.target as HTMLInputElement);
 
         const formData = new FormData();
 
@@ -86,53 +113,70 @@ export default function ProductModal({
 
         formData.append('file-to-upload', file);
 
-        for (let [key, value] of formData.entries()) {
-            console.log('formData', key, value);
-        }
-
-        const imgUrlRes = await uploadImg({ returnType: 'async', params: formData});
+        const imgUrlRes = await uploadImg({ params: formData});
 
         const imgUrl = imgUrlRes?.success
             ? imgUrlRes.imageUrl
             : '';
 
-        console.log('imgUrlRes', imgUrlRes);
-        
         setProductInfo({
             ...productInfo,
             imageUrl: imgUrl
         })
 
-        console.log('productInfo', productInfo)
+        dispatch(removeLoading(loadingKey));
     }
 
-    // 觸發新增/編輯商品打開彈窗時，初始化商品資料
-    useEffect(() => {
-        if (!modalType) return;
+    // 表單送出 , 新增/編輯商品
+    const onSubmit = async() => {
+        const loadingKey = new Date().getTime().toString();
+        dispatch(addLoading(loadingKey)); 
 
-        modalType === 'create'
-            ? setProductInfo({...initData})
-            : setProductInfo(createdProductInfo || initData);
-    }, [modalType, createdProductInfo]);
+        const productParams = {
+            data: { ...productInfo }
+        };
+        
+        let res = null;
 
-    const createProductHandler = async () => {
-        const params = {
-            data: productInfo
+        switch (modalType) {
+            case 'create':
+                res = await createProduct({ params: productParams });
+                break;
+            case 'delete':
+                res = await deleteProduct({ path: createdProductInfo?.id });
+                break;
+            default:
+                res = await updateProduct({ params: productParams, path: createdProductInfo?.id });
+                break;
         }
-        const res = await createProduct({ returnType: 'async', params });
 
-        res.success && modalTriggerHandler();
-    }
+        if (res.success) {
+            await updateProductList();
+            modalTriggerHandler();
+        }
+        dispatch(removeLoading(loadingKey));
 
-    // 表單送出
-    const handleSubmit = () => {
-        modalType === 'create'
-            ? createProductHandler()
-            : null
+        alertHandler(res.success ? 'success' : 'error', res.message);
     };
 
     return (
-        <Dialog open={Boolean(modalType)} onOpenChange={modalTriggerHandler}>
+        modalType === 'delete'
+            ? <ConfirmModal
+                modalTite={'確認刪除商品?'}
+                modalType={modalType}
+                modalTriggerHandler={modalTriggerHandler}
+                confirmOption={{
+                    needConfirm: true,
+                    confirmTitle: '確認',
+                    confirmHandler: () => onSubmit()
+                }}
+                cancelOption={{
+                    needCancel: true,
+                    cancelTitle: '取消',
+                    cancelHandler: () => modalTriggerHandler()
+                }}
+            />
+            : <Dialog open={Boolean(modalType)} onOpenChange={modalTriggerHandler}>
             {/* onInteractOutside 避免點擊overlay 導致彈窗關閉 */}
             <DialogContent
                 className="max-w-[720px] max-h-full overflow-y-auto"
@@ -142,148 +186,201 @@ export default function ProductModal({
                     <DialogTitle>
                         { modalTite }
                     </DialogTitle>
-                    {
-                        modalDescription && <DialogDescription>{ modalDescription }</DialogDescription>
-                    }
+                    { modalDescription && <DialogDescription>{ modalDescription }</DialogDescription> }
                 </DialogHeader>
-                <div className="flex md:flex-row md: flex-col-reverse">
-                    <div className="flex flex-1 flex-col mr-2">
-                        <div className="flex flex-col">
-                            <Label htmlFor="imageUrl" className="flex h-8 items-center text-md">
-                                圖片網址
-                            </Label>
-                            <Input
-                                id="imageUrl"
-                                name="imageUrl"
-                                value={productInfo.imageUrl}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <Label htmlFor="imageFile" className="flex h-8 items-center text-md">
-                                或 上傳圖片
-                            </Label>
-                            <Input
-                                id="imageFile"
-                                name="file-to-upload"
-                                className="file:bg-confirm file:text-confirm-foreground file:font-normal"
-                                type="file"
-                                onChange={handleFileUpload}
-                            />
-                        </div>
-                    </div>
-                    <div className="flex flex-2 flex-col">
-                        <div className="flex flex-col">
-                            <Label htmlFor="title" className="flex h-8 items-center text-md">
-                                標題
-                            </Label>
-                            <Input
-                                id="title"
-                                name="title"
-                                value={productInfo.title}
-                                onChange={handleChange}
-                            />
-                        </div>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full space-y-8 pt-5' >
                         <div className="flex">
-                            <div className="flex-1 pr-2 box-border">
-                                <Label htmlFor="category" className="flex h-8 items-center text-md">
-                                    分類
-                                </Label>
-                                <Input
-                                    id="category"
-                                    name="category"
-                                    value={productInfo.category}
-                                    onChange={handleChange}
+                            <div className="flex flex-1 flex-col mr-2">
+                                <FormField
+                                    control={form.control}
+                                    name='imageUrl'
+                                    render={({}) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel htmlFor="imageUrl" className="flex h-8 items-center text-md">圖片網址</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    id="imageUrl"
+                                                    name="imageUrl"
+                                                    value={productInfo.imageUrl}
+                                                    onChange={handleChange}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name='imageUrl'
+                                    render={({}) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel htmlFor="imageFile" className="flex h-8 items-center text-md">或 上傳圖片</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    id="imageFile"
+                                                    name="file-to-upload"
+                                                    className="file:bg-confirm file:text-confirm-foreground file:font-normal"
+                                                    type="file"
+                                                    onChange={handleFileUpload}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
                                 />
                             </div>
-                            <div className="flex-1">
-                                <Label htmlFor="unit" className="flex h-8 items-center text-md">
-                                    單位
-                                </Label>
-                                <Input
-                                    id="unit"
-                                    name="unit"
-                                    value={productInfo.unit}
-                                    onChange={handleChange}
+
+                            <div className="flex flex-2 flex-col">
+                                <FormField
+                                    control={form.control}
+                                    name='title'
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel htmlFor="title" className="flex h-8 items-center text-md">標題</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    onChange={handleChange}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="flex">
+                                    <FormField
+                                        control={form.control}
+                                        name='category'
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1 pr-2 box-border">
+                                                <FormLabel htmlFor="category" className="flex h-8 items-center text-md">分類</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        id="category"
+                                                        {...field}
+                                                        onChange={handleChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name='unit'
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1">
+                                                <FormLabel htmlFor="unit" className="flex h-8 items-center text-md">單位</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        id="unit"
+                                                        {...field}
+                                                        onChange={handleChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex">
+                                    <FormField
+                                        control={form.control}
+                                        name='origin_price'
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1">
+                                                <FormLabel htmlFor="origin_price" className="flex h-8 items-center text-md">原價</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        id="origin_price"
+                                                        {...field}
+                                                        onChange={handleChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name='price'
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1">
+                                                <FormLabel htmlFor="origin_price" className="flex h-8 items-center text-md">售價</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        id="price"
+                                                        {...field}
+                                                        onChange={handleChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <FormField
+                                    control={form.control}
+                                    name='description'
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel htmlFor="description" className="flex h-8 items-center text-md">商品描述</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    id="description"
+                                                    placeholder="Type your message here."
+                                                    {...field}
+                                                    onChange={handleChange}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name='content'
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel htmlFor="content" className="flex h-8 items-center text-md">說明內容</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    id="content"
+                                                    placeholder="Type your message here."
+                                                    {...field}
+                                                    onChange={handleChange}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name='is_enabled'
+                                    render={({ field }) => (
+                                        <FormItem className="space-y-0 flex h-10 items-center">
+                                            <FormControl>
+                                                <Checkbox
+                                                    id="is_enabled"
+                                                    checked={field.value}
+                                                    onCheckedChange={handleCheck}
+                                                />
+                                            </FormControl>
+                                            <FormLabel
+                                                htmlFor="is_enabled"
+                                                className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            >
+                                                是否啟用
+                                            </FormLabel>
+                                        </FormItem>
+                                    )}
                                 />
                             </div>
                         </div>
-                        <div className="flex">
-                            <div className="flex-1 pr-2 box-border">
-                                <Label htmlFor="origin_price" className="flex h-8 items-center text-md">
-                                    原價
-                                </Label>
-                                <Input
-                                    id="origin_price"
-                                    name="origin_price"
-                                    value={productInfo.origin_price}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <Label htmlFor="price" className="flex h-8 items-center text-md">
-                                    售價
-                                </Label>
-                                <Input
-                                    id="price"
-                                    name="price"
-                                    value={productInfo.price}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                        <div className="flex justify-end">
+                            <Button className="mr-2" type="submit" >儲存</Button>
+                            <DialogClose asChild>
+                                <Button type="button" variant="destructive">
+                                    取消
+                                </Button>
+                            </DialogClose>
                         </div>
-                        <div className="flex flex-col">
-                            <Label htmlFor="description" className="flex h-8 items-center text-md">
-                                商品描述
-                            </Label>
-                            <Textarea
-                                id="description"
-                                name="description"
-                                placeholder="Type your message here."
-                                value={productInfo.description}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <Label htmlFor="content" className="flex h-8 items-center text-md">
-                                說明內容
-                            </Label>
-                            <Textarea
-                                id="content"
-                                name="content"
-                                placeholder="Type your message here."
-                                value={productInfo.content}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="flex h-10 items-center">
-                            <Checkbox
-                                id="is_enabled"
-                                name="is_enabled"
-                                value={productInfo.is_enabled}
-                                onChange={handleChange}
-                            />
-                            <Label
-                                htmlFor="is_enabled"
-                                className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                                是否啟用
-                            </Label>
-                        </div>
-                    </div>
-                </div>
-                <DialogFooter>
-                    <DialogClose asChild>
-                        <Button type="button" variant="destructive">
-                            取消
-                        </Button>
-                    </DialogClose>
-                    <Button type="button" onClick={handleSubmit}>儲存</Button>
-                </DialogFooter>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     )
 }
-
-
-

@@ -24,6 +24,6 @@ export const loadingSlice = createSlice({
 
 export const { addLoading, removeLoading } = loadingSlice.actions;
 
-export const isFullLoading = (state: RootState) => !!Object.keys(state.loadingSlice.loadingQueue).length;
+export const loadingQueue = (state: RootState) => state.loadingSlice.loadingQueue;
 
 export default loadingSlice.reducer;

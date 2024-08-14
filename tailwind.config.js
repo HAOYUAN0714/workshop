@@ -28,14 +28,30 @@ module.exports = {
       colors: {
         transparent: "transparent",
         current: "currentColor",
-        warning: "var(--warning)",
-        error: "var(--error)",
-        success: "var(--success)",
+        warning: {
+          DEFAULT: "var(--warning)",
+          foreground: "var(--warning-foreground)",
+          secondary: "var(--warning-secondary)",
+          "secondary-foreground": "var(--warning-secondary-foreground)",
+        },
+        error: {
+          DEFAULT: "var(--error)",
+          foreground: "var(--error-foreground)",
+          secondary: "var(--error-secondary)",
+          "secondary-foreground": "var(--error-secondary-foreground)",
+        },
+        success: {
+          DEFAULT: "var(--success)",
+          foreground: "var(--success-foreground)",
+          secondary: "var(--success-secondary)",
+          "secondary-foreground": "var(--success-secondary-foreground)",
+        },
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
         background: "var(--background)",
         foreground: "var(--foreground)",
+        disabled: "var(--disabled)",
         confirm: {
           DEFAULT: "var(--confirm)",
           foreground: "var(--confirm-foreground)",

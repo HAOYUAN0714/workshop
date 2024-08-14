@@ -4,11 +4,24 @@
  
 @layer base {
   :root {
-    --warning: #FBBE24;
-    --error: #CE0000;
-    --success: #00A86B;
+    --warning: #cb5d00;
+    --warning-foreground: #FFF;
+    --warning-secondary: #feefdc;
+    --warning-secondary-foreground: #231f1c;
+
+    --error: #cf1321;
+    --error-foreground: #FFF;
+    --error-secondary: #fbe6e5;
+    --error-secondary-foreground: #231f1c;
+
+    --success: #50AFBF;
+    --success-foreground: #FFF;
+    --success-secondary: #d1eded;
+    --success-secondary-foreground: #231f1c;
+
     --background: #ffffff;
     --foreground: #020817;
+    --disabled: #a8a8a8;
 
     --card: #ffffff;
     --card-foreground: #020817;
@@ -44,11 +57,24 @@
   }
  
   .dark {
-    --warning: #FBBE24;
-    --error: #CE0000;
-    --success: #00A86B;
+    --warning: #cb5d00;
+    --warning-foreground: #FFF;
+    --warning-secondary: #feefdc;
+    --warning-secondary-foreground: #231f1c;
+
+    --error: #cf1321;
+    --error-foreground: #FFF;
+    --error-secondary: #fbe6e5;
+    --error-secondary-foreground: #231f1c;
+
+    --success: #50AFBF;
+    --success-foreground: #FFF;
+    --success-secondary: #d1eded;
+    --success-secondary-foreground: #231f1c;
+
     --background: #430824;
     --foreground: #FFFFFF;
+    --disabled: #a8a8a8;
  
     --card: #020817;
     --card-foreground: #f8fafc;
