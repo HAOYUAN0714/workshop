@@ -13,8 +13,7 @@ import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import ProductModal from "@/components/admin/modal/productModal";
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
-// import AlertDestructive from '@/components/common/alertDestructive/index'
-import { getProductList, updateProduct } from "@/api/admin/products"
+import { getProductList, updateProduct, getAllProduct } from "@/api/admin/products"
 import productInterface from "@/interface/products"
 import { addAlert, removeAlert } from "@/redux/common/alertSlice";
 
@@ -38,6 +37,21 @@ export default function AdminProducts() {
 
     const [modalType, setModalType] = useState('');
 
+    const [categoryList, setCategoryList] = useState<string[]>([]); // 分類列表
+
+    // 從 productList 更新分類
+    const updateCategoryList = async() => {
+        // 取得全部商品列表 , 只有在初始化時或者新增的商品中出現新的類別才做更新
+        const res = await getAllProduct();
+
+        const allProductList = Object.values(res.products) as productInterface[];
+
+        if (res.success) {
+            const categoryList = allProductList.map((product) => product.category);
+            setCategoryList(Array.from(new Set(categoryList)));
+        }
+    };
+
     // 更新商品列表
     const updateProductList = async () => {
         const loadingKey = new Date().getTime().toString();
@@ -47,7 +61,7 @@ export default function AdminProducts() {
 
         if (productRes.success) {
             setProductList(productRes.products);
-            const pageArray = Array.from({ length: pagination.total_pages }, (_, i) => i + 1)
+            const pageArray = Array.from({ length: pagination.total_pages }, (_, i) => i + 1);
             setPagination({ ...productRes.pagination, pageArray });
         }
 
@@ -85,6 +99,11 @@ export default function AdminProducts() {
         setProductFilter({ ...productFilter, page: page.toString() });
     };
 
+    // 初始化更新一次分類列表
+    useEffect(() => {
+        updateCategoryList();
+    }, []);
+
     // 如果 篩選資料 有變動，則重新取得商品列表
     useEffect(() => {
         updateProductList();
@@ -104,9 +123,11 @@ export default function AdminProducts() {
                 modalTriggerHandler={() => modalTriggerHandler('')}
                 createdProductInfo={editProductInfo}
                 updateProductList={updateProductList}
+                updateCategoryList={updateCategoryList}
                 alertHandler={alertHandler}
+                categoryList={categoryList}
             />
-            <h2 className="flex flex-none items-center border-b-2 border-b-border  h-16 text-2xl">
+            <h2 className="flex flex-none items-center border-b-2 border-b-border h-16 text-2xl">
                 產品列表
             </h2>
             <div className="flex flex-1 flex-col">
@@ -125,9 +146,10 @@ export default function AdminProducts() {
                             <TableRow>
                                 <TableHead className="w-[100px]">分類</TableHead>
                                 <TableHead>名稱</TableHead>
+                                <TableHead>原價</TableHead>
                                 <TableHead>售價</TableHead>
-                                <TableHead>啟用狀態</TableHead>
-                                <TableHead>操作</TableHead>
+                                <TableHead className="w-[100px]">啟用狀態</TableHead>
+                                <TableHead className="w-[180px]">操作</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -135,6 +157,7 @@ export default function AdminProducts() {
                                 <TableRow key={productItem.id}>
                                     <TableCell className="font-medium">{productItem.category}</TableCell>
                                     <TableCell>{productItem.title}</TableCell>
+                                    <TableCell>{productItem.origin_price}</TableCell>
                                     <TableCell>{productItem.price}</TableCell>
                                     <TableCell>
                                         <Switch
@@ -144,7 +167,7 @@ export default function AdminProducts() {
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <Button type="button" onClick={() => modalTriggerHandler('edit', productItem)}>
+                                        <Button className="mr-2" type="button" onClick={() => modalTriggerHandler('edit', productItem)}>
                                             編輯
                                         </Button>
                                         <Button type="button" variant="destructive" onClick={() => modalTriggerHandler('delete', productItem)}>

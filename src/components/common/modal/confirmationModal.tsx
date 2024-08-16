@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react"
-import { useDispatch } from 'react-redux'
+import {  useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -40,8 +39,6 @@ export default function ProductModal({
     confirmOption = { needConfirm: true, confirmTitle: '儲存', confirmHandler: () => {} },
     cancelOption = { needCancel: true, cancelTitle: '取消', cancelHandler: () => {} },
 }: modalProps) {
-    const dispatch = useDispatch();
-
     const { needConfirm, confirmTitle, confirmHandler } = confirmOption;
     const { needCancel, cancelTitle, cancelHandler } = cancelOption;
 

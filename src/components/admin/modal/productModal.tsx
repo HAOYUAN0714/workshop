@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useDispatch } from 'react-redux'
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { Button } from "@/components/ui/button"
 import ConfirmModal from "@/components/common/modal/confirmationModal";
 import {
@@ -18,6 +18,13 @@ import {
     FormItem,
     FormLabel,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import productInterface from "@/interface/products"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -35,7 +42,9 @@ interface modalProps {
     createdProductInfo?: modalProductInterface;
     modalTriggerHandler: () => void;
     updateProductList: () => void;
+    updateCategoryList: () => void;
     alertHandler: (alertType: string, message: string) => void;
+    categoryList: string[];
 }
 
 export default function ProductModal({
@@ -45,7 +54,9 @@ export default function ProductModal({
     createdProductInfo,
     modalTriggerHandler,
     updateProductList,
-    alertHandler
+    updateCategoryList,
+    alertHandler,
+    categoryList,
 }: modalProps) {
     const dispatch = useDispatch();
     // 新增商品初始化資料
@@ -58,8 +69,10 @@ export default function ProductModal({
         description: '',
         content: '',
         imageUrl: '',
-        is_enabled: false 
-    } 
+        is_enabled: false ,
+        new_category: '', // 新增分類 , 非 api 參數
+        enable_new_category: false, // 是否使用新增分類 , 非 api 參數
+    };
 
     const [productInfo, setProductInfo] = useState({...initProduct});
 
@@ -74,24 +87,43 @@ export default function ProductModal({
             ? setProductInfo({
                 ...initProduct,
                 ...createdProductInfo,
-                is_enabled: Boolean(createdProductInfo?.is_enabled)
+                is_enabled: Boolean(createdProductInfo?.is_enabled),
+                new_category: '',
+                enable_new_category: false,
             })
             : setProductInfo({...initProduct});
-    }, [modalType]);
+    }, [modalType]);  
 
     // 表單各編輯項目事件處理
     const handleChange = (e: React.SyntheticEvent) => {
         const { value, name } = (e.target as HTMLInputElement);
-
+        console.log('handleChange', value, name);
+        // 分類優先使用自訂分類的值
         setProductInfo({
             ...productInfo,
             [name]: name === 'price' || name === 'origin_price'
                 ? Number(value)
-                : value
+                : value,
+        });
+    };
+    // 表單各編輯項目事件處理
+    const handleSelect = (selectValue: string) => {
+        console.log('handleSelect', selectValue);
+        // 分類優先使用自訂分類的值
+        setProductInfo({
+            ...productInfo,
+            category: selectValue,
         });
     };
 
-    const handleCheck = (checked: boolean) => {
+    const checkNewCategory = (checked: boolean) => {
+        setProductInfo({
+            ...productInfo,
+            enable_new_category: checked,
+        });
+    }
+
+    const checkProductEnabled = (checked: boolean) => {
         setProductInfo({
             ...productInfo,
             is_enabled: checked,
@@ -130,10 +162,19 @@ export default function ProductModal({
     // 表單送出 , 新增/編輯商品
     const onSubmit = async() => {
         const loadingKey = new Date().getTime().toString();
-        dispatch(addLoading(loadingKey)); 
+        dispatch(addLoading(loadingKey));
+
+        const { enable_new_category: enableNewCategory, new_category,  ...apiParams} = productInfo;
+
+        console.log('productInfo', productInfo)
 
         const productParams = {
-            data: { ...productInfo }
+            data: {
+                ...apiParams,
+                category: enableNewCategory
+                    ? new_category
+                    : apiParams.category
+            }
         };
         
         let res = null;
@@ -152,6 +193,7 @@ export default function ProductModal({
 
         if (res.success) {
             await updateProductList();
+            enableNewCategory && await updateCategoryList();
             modalTriggerHandler();
         }
         dispatch(removeLoading(loadingKey));
@@ -191,7 +233,7 @@ export default function ProductModal({
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full space-y-8 pt-5' >
                         <div className="flex">
-                            <div className="flex flex-1 flex-col mr-2">
+                            <div className="flex flex-2 flex-col mr-2">
                                 <FormField
                                     control={form.control}
                                     name='imageUrl'
@@ -229,7 +271,7 @@ export default function ProductModal({
                                 />
                             </div>
 
-                            <div className="flex flex-2 flex-col">
+                            <div className="flex flex-3 flex-col">
                                 <FormField
                                     control={form.control}
                                     name='title'
@@ -245,16 +287,93 @@ export default function ProductModal({
                                         </FormItem>
                                     )}
                                 />
-                                <div className="flex">
+                                <div className="flex flex-col">
+                                    <FormField
+                                        control={form.control}
+                                        name='enable_new_category'
+                                        render={({ field }) => (
+                                            <FormItem className="space-y-0 flex h-10 items-center">
+                                                <FormLabel className="flex h-8 items-center text-md mr-2">分類</FormLabel>
+                                                <FormControl>
+                                                    <Checkbox
+                                                        id="enable_new_category"
+                                                        checked={field.value}
+                                                        onCheckedChange={checkNewCategory}
+                                                    />
+                                                </FormControl>
+                                                <FormLabel
+                                                    htmlFor="enable_new_category"
+                                                    className="ml-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                >
+                                                    使用並輸入新分類
+                                                </FormLabel>
+                                            </FormItem>
+                                        )}
+                                    />
                                     <FormField
                                         control={form.control}
                                         name='category'
                                         render={({ field }) => (
-                                            <FormItem className="flex-1 pr-2 box-border">
-                                                <FormLabel htmlFor="category" className="flex h-8 items-center text-md">分類</FormLabel>
+                                            <FormItem className={`flex-1 pr-2 box-border ${productInfo.enable_new_category && 'hidden'}`}>
+                                                <Select onValueChange={handleSelect} defaultValue={field.value} >
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="選擇分類" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        { categoryList.map((category) => {
+                                                            return (
+                                                                <SelectItem value={category} key={category}>{category}</SelectItem>
+                                                            )
+                                                        })}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name='new_category'
+                                        render={({ field }) => (
+                                            <FormItem className={`flex-1 pr-2 box-border ${!productInfo.enable_new_category && 'hidden'}`}>
                                                 <FormControl>
                                                     <Input
-                                                        id="category"
+                                                        id="new_category"
+                                                        {...field}
+                                                        onChange={handleChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex">
+                                    <FormField
+                                        control={form.control}
+                                        name='origin_price'
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1 pr-2">
+                                                <FormLabel htmlFor="origin_price" className="flex h-8 items-center text-md">原價</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        id="origin_price"
+                                                        {...field}
+                                                        onChange={handleChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name='price'
+                                        render={({ field }) => (
+                                            <FormItem className="flex-1 pr-2">
+                                                <FormLabel htmlFor="origin_price" className="flex h-8 items-center text-md">售價</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        id="price"
                                                         {...field}
                                                         onChange={handleChange}
                                                     />
@@ -271,40 +390,6 @@ export default function ProductModal({
                                                 <FormControl>
                                                     <Input
                                                         id="unit"
-                                                        {...field}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                <div className="flex">
-                                    <FormField
-                                        control={form.control}
-                                        name='origin_price'
-                                        render={({ field }) => (
-                                            <FormItem className="flex-1">
-                                                <FormLabel htmlFor="origin_price" className="flex h-8 items-center text-md">原價</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        id="origin_price"
-                                                        {...field}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name='price'
-                                        render={({ field }) => (
-                                            <FormItem className="flex-1">
-                                                <FormLabel htmlFor="origin_price" className="flex h-8 items-center text-md">售價</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        id="price"
                                                         {...field}
                                                         onChange={handleChange}
                                                     />
@@ -356,7 +441,7 @@ export default function ProductModal({
                                                 <Checkbox
                                                     id="is_enabled"
                                                     checked={field.value}
-                                                    onCheckedChange={handleCheck}
+                                                    onCheckedChange={checkProductEnabled}
                                                 />
                                             </FormControl>
                                             <FormLabel

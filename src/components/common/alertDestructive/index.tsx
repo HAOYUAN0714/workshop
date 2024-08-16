@@ -35,7 +35,7 @@ export default function AlertDestructive({
     return (
         message
             ? <Alert className={alertClass} variant='destructive'>
-            <div className="close-alert absolute top-2 right-3" onClick={deleteAlert}>
+            <div className="close-alert absolute top-2 right-3 cursor-pointer  hover:scale-110" onClick={deleteAlert}>
                 <Cross1Icon className={`text-${alertType}`}/>
             </div>
             <AlertIcon className={'mr-1'} alertType={alertType} />
