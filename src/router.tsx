@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate, createHashRouter } from 'react-router-dom';
+import { Navigate, createHashRouter, useLocation, useNavigate } from 'react-router-dom';
 import { checkIsLogin } from '@/api/admin/user' 
-
-import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Dashboard  from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/AdminProducts';
@@ -31,16 +29,17 @@ const LoginDirectGrard = ({
 };
 
 // 判斷頁面是否有token且正確，不是的話導向登入頁面
-const RouterGuard = ({
+const RouterGuard: React.FC<{ children: JSX.Element }>  = ({
     children,
-}: RouterGuardProps) => {
+}) => {
     const [isValidLogin, setIsValidLogin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isChecked, setIsChecked] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         (async() => {
-
             if (!isChecked) {
                 setIsChecked(true);
                 const token = document.cookie
@@ -52,17 +51,17 @@ const RouterGuard = ({
                 setIsValidLogin(Boolean(token && loginSuccess)) 
                 setIsLoading(false);
             }
-
         })()
-
-    
     }, []);
 
-    // useEffect(() => {
-    //     if (isValidLogin) {
-    //         setIsLoading(false);
-    //     }
-    // }, [isValidLogin])
+
+    useEffect(() => {
+        (async() => {
+            if (isValidLogin && location.pathname === '/admin') {
+                navigate('/admin/products');
+            }
+        })()
+    }, [isValidLogin, location, navigate]);
 
     if (isLoading) return <FullLoading isLoading={isLoading} />;
 
@@ -71,19 +70,9 @@ const RouterGuard = ({
     }
 
     return children;
-
 };
 
 const router = createHashRouter([
-    {
-        // 首頁
-        path: '/',
-        element: (
-            <RouterGuard>
-                <Home />
-            </RouterGuard>
-        ),
-    },
     {
         // 首頁
         path: '/admin',

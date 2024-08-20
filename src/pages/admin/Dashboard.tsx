@@ -66,7 +66,7 @@ export default function Dashboard() {
     const linkClass = 'flex justify-center items-center w-full p-4 text-sm';
 
     return (
-        <div id="admin-dashboard" className="min-w-[1024px] flex flex-col h-screen bg-background">
+        <div id="admin-dashboard" className="w-full flex flex-col h-screen bg-background">
             <div id="top-alert-list" className='z-50 fixed top-1 right-1 w-[275px]'>
                 {alertList.map((alertInfo) => (
                     <AlertDestructive

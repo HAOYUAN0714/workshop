@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useDispatch } from 'react-redux'
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Button } from "@/components/ui/button"
 import ConfirmModal from "@/components/common/modal/confirmationModal";
 import {
@@ -48,8 +48,8 @@ interface modalProps {
 }
 
 export default function ProductModal({
-    modalTite = 'Edit Profile',
-    modalDescription = 'Make changes to your profile here. Click save when you\'re done.',
+    modalTite = '',
+    modalDescription = '',
     modalType = '',
     createdProductInfo,
     modalTriggerHandler,
@@ -97,7 +97,6 @@ export default function ProductModal({
     // 表單各編輯項目事件處理
     const handleChange = (e: React.SyntheticEvent) => {
         const { value, name } = (e.target as HTMLInputElement);
-        console.log('handleChange', value, name);
         // 分類優先使用自訂分類的值
         setProductInfo({
             ...productInfo,
@@ -108,7 +107,6 @@ export default function ProductModal({
     };
     // 表單各編輯項目事件處理
     const handleSelect = (selectValue: string) => {
-        console.log('handleSelect', selectValue);
         // 分類優先使用自訂分類的值
         setProductInfo({
             ...productInfo,
@@ -165,8 +163,6 @@ export default function ProductModal({
         dispatch(addLoading(loadingKey));
 
         const { enable_new_category: enableNewCategory, new_category,  ...apiParams} = productInfo;
-
-        console.log('productInfo', productInfo)
 
         const productParams = {
             data: {

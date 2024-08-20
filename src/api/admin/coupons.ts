@@ -33,4 +33,4 @@ export const updateCoupon = (options: optionProps) => request('admin/coupon', 'P
 * 刪除指定優惠券
 * @path id | string
 */ 
-export const deleteAllCoupon = (options: optionProps) => request('admin/coupon', 'DELETE', options);
+export const deleteCoupon = (options: optionProps) => request('admin/coupon', 'DELETE', options);

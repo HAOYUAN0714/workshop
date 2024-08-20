@@ -7,7 +7,7 @@ import { RootState } from '@/redux/store';
 export default function App () {
     const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
 
-    const themeClass = `router-wrap ${theme}`;
+    const themeClass = `router-wrap min-w-[1024px] ${theme}`;
 
     return (
         <div className={themeClass}>

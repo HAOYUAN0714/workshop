@@ -7,7 +7,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import NoDataHint from '@/components/common/noDataHint';
 import PageSet from "@/components/common/pageSet";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import ProductModal from "@/components/admin/modal/productModal";
@@ -21,6 +22,8 @@ export default function AdminProducts() {
     const dispatch = useDispatch();
 
     const [productList, setProductList] = useState([]);
+
+    const [isUpdated, setIsUpdated] = useState(false);
 
     const [pagination, setPagination] = useState({
         category: null,
@@ -65,10 +68,12 @@ export default function AdminProducts() {
             setPagination({ ...productRes.pagination, pageArray });
         }
 
+        setIsUpdated(true);
+
         dispatch(removeLoading(loadingKey));
     };
 
-    // 刪除/啟用/關閉 個別商品
+    // 啟用/關閉 個別商品
     const switchProductEnable = async (productInfo: productInterface) => {
         const loadingKey = new Date().getTime().toString();
         dispatch(addLoading(loadingKey));
@@ -111,7 +116,7 @@ export default function AdminProducts() {
 
     // 切換 modal 流程
     const modalTriggerHandler = (type: string, productInfo?: productInterface ) => {
-        setEditProductInfo(type === 'edit' || type === 'delete' ? {...productInfo} : {});
+        setEditProductInfo(type === 'edit' || type === 'delete' ? { ...productInfo } : {});
         setModalType(type);
     }
 
@@ -141,43 +146,47 @@ export default function AdminProducts() {
                 </div>
                 {/* 商品列表 */}
                 <div className="flex flex-1">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[100px]">分類</TableHead>
-                                <TableHead>名稱</TableHead>
-                                <TableHead>原價</TableHead>
-                                <TableHead>售價</TableHead>
-                                <TableHead className="w-[100px]">啟用狀態</TableHead>
-                                <TableHead className="w-[180px]">操作</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {productList.map((productItem: productInterface) => (
-                                <TableRow key={productItem.id}>
-                                    <TableCell className="font-medium">{productItem.category}</TableCell>
-                                    <TableCell>{productItem.title}</TableCell>
-                                    <TableCell>{productItem.origin_price}</TableCell>
-                                    <TableCell>{productItem.price}</TableCell>
-                                    <TableCell>
-                                        <Switch
-                                            id="themeMode"
-                                            checked={!!productItem.is_enabled}
-                                            onCheckedChange={() => switchProductEnable(productItem)}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button className="mr-2" type="button" onClick={() => modalTriggerHandler('edit', productItem)}>
-                                            編輯
-                                        </Button>
-                                        <Button type="button" variant="destructive" onClick={() => modalTriggerHandler('delete', productItem)}>
-                                            刪除
-                                        </Button>
-                                    </TableCell>
+                    {
+                        productList.length === 0 && isUpdated
+                            ? <NoDataHint />
+                            : <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[100px]">分類</TableHead>
+                                    <TableHead>名稱</TableHead>
+                                    <TableHead>原價</TableHead>
+                                    <TableHead>售價</TableHead>
+                                    <TableHead className="w-[100px]">啟用狀態</TableHead>
+                                    <TableHead className="w-[180px]">操作</TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {productList.map((productItem: productInterface) => (
+                                    <TableRow key={ productItem.id }>
+                                        <TableCell className="font-medium">{ productItem.category }</TableCell>
+                                        <TableCell>{ productItem.title }</TableCell>
+                                        <TableCell>{ productItem.origin_price }</TableCell>
+                                        <TableCell>{ productItem.price }</TableCell>
+                                        <TableCell>
+                                            <Switch
+                                                id="themeMode"
+                                                checked={!!productItem.is_enabled}
+                                                onCheckedChange={() => switchProductEnable(productItem)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button className="mr-2" type="button" onClick={() => modalTriggerHandler('edit', productItem)}>
+                                                編輯
+                                            </Button>
+                                            <Button type="button" variant="destructive" onClick={() => modalTriggerHandler('delete', productItem)}>
+                                                刪除
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    }
                 </div>
                 {/* 分頁 */}
                 <div className="flex items-center border-t-2 h-16">
