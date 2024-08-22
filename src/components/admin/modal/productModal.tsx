@@ -63,8 +63,8 @@ export default function ProductModal({
     const initProduct = {
         title: '',
         category: '',
-        origin_price: 300,
-        price: 200,
+        origin_price: 150,
+        price: 120,
         unit: '',
         description: '',
         content: '',
@@ -276,7 +276,9 @@ export default function ProductModal({
                                             <FormLabel htmlFor="title" className="flex h-8 items-center text-md">標題</FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    type="text"
                                                     {...field}
+                                                    value={productInfo.title}
                                                     onChange={handleChange}
                                                 />
                                             </FormControl>
@@ -337,6 +339,7 @@ export default function ProductModal({
                                                     <Input
                                                         id="new_category"
                                                         {...field}
+                                                        value={productInfo.new_category}
                                                         onChange={handleChange}
                                                     />
                                                 </FormControl>
@@ -355,6 +358,7 @@ export default function ProductModal({
                                                     <Input
                                                         id="origin_price"
                                                         {...field}
+                                                        type="number"
                                                         onChange={handleChange}
                                                     />
                                                 </FormControl>
@@ -366,11 +370,12 @@ export default function ProductModal({
                                         name='price'
                                         render={({ field }) => (
                                             <FormItem className="flex-1 pr-2">
-                                                <FormLabel htmlFor="origin_price" className="flex h-8 items-center text-md">售價</FormLabel>
+                                                <FormLabel htmlFor="price" className="flex h-8 items-center text-md">售價</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         id="price"
                                                         {...field}
+                                                        type="number"
                                                         onChange={handleChange}
                                                     />
                                                 </FormControl>
@@ -387,6 +392,7 @@ export default function ProductModal({
                                                     <Input
                                                         id="unit"
                                                         {...field}
+                                                        value={productInfo.unit}
                                                         onChange={handleChange}
                                                     />
                                                 </FormControl>
@@ -403,8 +409,9 @@ export default function ProductModal({
                                             <FormControl>
                                                 <Textarea
                                                     id="description"
-                                                    placeholder="Type your message here."
+                                                    placeholder=""
                                                     {...field}
+                                                    value={productInfo.description}
                                                     onChange={handleChange}
                                                 />
                                             </FormControl>
@@ -420,8 +427,9 @@ export default function ProductModal({
                                             <FormControl>
                                                 <Textarea
                                                     id="content"
-                                                    placeholder="Type your message here."
+                                                    placeholder=""
                                                     {...field}
+                                                    value={productInfo.content}
                                                     onChange={handleChange}
                                                 />
                                             </FormControl>

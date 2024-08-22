@@ -6,6 +6,12 @@ import Dashboard  from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminCoupons from './pages/admin/AdminCoupons';
 import AdminOrders from './pages/admin/AdminOrders';
+import FrontContainer from './pages/customer/FrontContainer';
+import ProductList from './pages/customer/ProductList';
+import Product from './pages/customer/Product';
+import Cart from './pages/customer/Cart';
+import Checkout from './pages/customer/Checkout';
+import OrderResult from './pages/customer/OrderResult';
 import FullLoading from './components/common/fullLoading';
 
 // 路由守衛
@@ -66,7 +72,7 @@ const RouterGuard: React.FC<{ children: JSX.Element }>  = ({
     if (isLoading) return <FullLoading isLoading={isLoading} />;
 
     if (!isValidLogin) {
-        return  <Navigate to={'/login'} replace />;
+        return  <Navigate to={'/admin/login'} replace />;
     }
 
     return children;
@@ -74,7 +80,7 @@ const RouterGuard: React.FC<{ children: JSX.Element }>  = ({
 
 const router = createHashRouter([
     {
-        // 首頁
+        // 後台
         path: '/admin',
         element: (
             <RouterGuard>
@@ -112,8 +118,40 @@ const router = createHashRouter([
         ],
     },
     {
-        // 登入頁面
-        path: '/login',
+        // 前台客端
+        path: '/customer',
+        element: <FrontContainer />,
+        children: [
+            {
+                // 產品列表
+                path: '/customer/products',
+                element: <ProductList />,
+            },
+            {
+                // 產品詳細資料
+                path: '/customer/product:id',
+                element: <Product />,
+            },
+            {
+                // 購物車
+                path: '/customer/cart',
+                element: <Cart />,
+            },
+            {
+                // 訂單確認
+                path: '/customer/checkout',
+                element: <Checkout />,
+            },
+            {
+                // 下訂結果
+                path: '/customer/orderResult:status',
+                element: <OrderResult />,
+            }, 
+        ],
+    },
+    {
+        // 後台登入頁面
+        path: '/admin/login',
         element: (
             <LoginDirectGrard>
                 <Login />

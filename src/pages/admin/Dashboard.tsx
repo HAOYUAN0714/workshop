@@ -35,7 +35,7 @@ export default function Dashboard() {
 
     const logoutFunc = () => {
         logout().then(() => {
-            navigate('/login');
+            navigate('/admin/login');
         });
     }
 
@@ -105,7 +105,7 @@ export default function Dashboard() {
                     <ul className='bg-muted-foreground'>
                         { sideMenu.map(menuItem => {
                             return (
-                                <li className='menu-item w-full flex  bg-muted-foreground hover:cursor-pointer hover:brightness-110' key={menuItem.title}>
+                                <li className='menu-item w-full flex  bg-background hover:cursor-pointer hover:brightness-110' key={menuItem.title}>
                                     <NavLink
                                         className={({ isActive }) => (isActive ? `${linkClass} bg-confirm  text-confirm-foreground` : linkClass)}
                                         to={menuItem.path}

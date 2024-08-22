@@ -33,7 +33,7 @@ interface modalProps {
 
 export default function ProductModal({
     modalTite = 'Edit Profile',
-    modalDescription = 'Make changes to your profile here. Click save when you\'re done.',
+    modalDescription = '',
     modalType = '',
     modalTriggerHandler,
     confirmOption = { needConfirm: true, confirmTitle: '儲存', confirmHandler: () => {} },
