@@ -89,7 +89,7 @@ export default function AdminProducts() {
 
         dispatch(removeLoading(loadingKey));
 
-        alertHandler(updateRes.success ? 'success' : 'error', updateRes.message);
+        alertHandler(updateRes?.success ? 'success' : 'error', updateRes.message || '商品更新失敗');
     };
 
     // 顯示 alert

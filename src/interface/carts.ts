@@ -1,6 +1,6 @@
 import Coupon from './coupons';
 
-export default interface Carts {
+export interface Cart {
     id: string,
     coupon?: Coupon,
     product: {
@@ -19,6 +19,12 @@ export default interface Carts {
     },
     product_id: string,
     qty: number,
+    total: number,
+    final_total: number,
+}
+
+export default interface CartInfo {
+    carts: Cart[],
     total: number,
     final_total: number,
 }

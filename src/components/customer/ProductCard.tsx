@@ -5,16 +5,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import productInterface from "@/interface/products";
-import { PlusCircle } from "lucide-react";
 
 interface ProductCardProps {
     productInfo: productInterface,
-    className: string
+    className: string,
+    updateCartList: () => void,
 }
 
 export default function ProductCard({
     productInfo,
-    className
+    className,
+    updateCartList,
 }: ProductCardProps) {
 
     return <Card className={`w-[300px] h-[150px] rounded-md ${className}`}>
@@ -38,6 +39,7 @@ export default function ProductCard({
                 rounded-full w-10 h-10 shadow-md
                 bg-background text-foreground text-xl
                 hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                onClick={updateCartList}
             >
                 +
             </div>

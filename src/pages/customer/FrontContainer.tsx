@@ -6,14 +6,18 @@ import { Switch } from "@/components/ui/switch"
 import { RootState } from '@/redux/store';
 import { setTheme } from '@/redux/common/userSettingSlice';
 import { loadingQueue } from '@/redux/common/loadingSlice';
+import { cartData } from '@/redux/customer/cartSlice';
 import { useState, useEffect } from 'react';
 import { alertInfoArray } from '@/redux/common/alertSlice';
 import AlertDestructive from '@/components/common/alertDestructive';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const loadingState = useSelector(loadingQueue);
+    const cartState = useSelector(cartData);
     const alertList = useSelector(alertInfoArray);
 
     const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
@@ -44,18 +48,38 @@ export default function Dashboard() {
                 ))}
             </div>
             <FullLoading isLoading={isLoading} />
-            <header className="w-full flex flex-none h-16 p-4 bg-header text-header-foreground">
-                <h2 className="flex-none header-title text-lg">
-                    商品列表
-                </h2>
-                <div className="flex ml-auto">
-                    <div className="flex flex-none items-center space-x-2">
-                        <Switch
-                            id="themeMode"
-                            checked={theme === 'dark'}
-                            onCheckedChange={handleThemeSwitch}
-                        />
-                        <Label htmlFor="themeMode">深色模式</Label>
+            <header className="z-50 flex-none w-dvw h-16">
+                <div className="fixed w-full flex flex-none h-16 p-4 bg-header text-header-foreground">
+                    <h2 className="flex-none header-title text-lg">
+                        商品列表
+                    </h2>
+                    <div className="flex ml-auto">
+                        <div className="flex flex-none items-center space-x-2">
+                            <Switch
+                                id="themeMode"
+                                checked={theme === 'dark'}
+                                onCheckedChange={handleThemeSwitch}
+                            />
+                            <Label htmlFor="themeMode">深色模式</Label>
+                        </div>
+                        <div className="relative flex flex-none items-center ml-3 text-lg cursor-pointer">
+                            <NavLink to={'/customer/cart'} >
+                                <FontAwesomeIcon icon={faCartShopping} />
+                            </NavLink>
+                            { cartState?.carts?.length
+                                && <div
+                                    className="
+                                        absolute bottom-0 right-0 translate-x-2
+                                        flex justify-center items-center
+                                        w-4 h-4 rounded-full
+                                        bg-error text-error-foreground
+                                        text-xs
+                                    "
+                                    >
+                                    {cartState?.carts?.length}
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </header>

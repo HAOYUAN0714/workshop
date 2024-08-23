@@ -7,7 +7,7 @@ import { optionProps } from '../base/request';
 * @product_id | string
 * @qty | number
 */ 
-export const createCart = (options: optionProps) => request('cart', 'POST', options);
+export const addCart = (options: optionProps) => request('cart', 'POST', options);
 
 /**
 * 獲取購物車資訊
