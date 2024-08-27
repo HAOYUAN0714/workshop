@@ -67,11 +67,6 @@ export default function ProductModal({
             : '';
     }
 
-    // 觸發 新增/編輯 商品打開彈窗時，初始化商品資料
-    useEffect(() => {
-
-    }, [modalType]);
-
     return (
         <Dialog open={Boolean(modalType)} onOpenChange={modalTriggerHandler}>
             {/* onInteractOutside 避免點擊overlay 導致彈窗關閉 */}

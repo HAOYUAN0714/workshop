@@ -15,9 +15,7 @@ type CategoryProductData = {
 
 export default function ProductList() {
     const dispatch = useDispatch();
-
     const [categoryProductData, setCategoryProductData] = useState<CategoryProductData>({});
-
     const [categoryList, setCategoryList] = useState<string[]>([]); // 分類列表
 
     // 顯示 alert
@@ -33,6 +31,7 @@ export default function ProductList() {
         dispatch(addLoading(loadingKey));
 
         const newCartRes = await addCart({ params: { data: { product_id, qty } }})
+
         // 新增失敗的話直接 return
         if (!newCartRes?.success) {
             alertHandler('error', newCartRes?.message || '購物車新增失敗');
@@ -42,6 +41,7 @@ export default function ProductList() {
 
         // 新增成功後重新獲取購物車資料
         const cartRes = await getCart({});
+
         if (!cartRes?.success) {
             alertHandler('error', cartRes?.message || '購物車更新失敗');
             dispatch(removeLoading(loadingKey));
@@ -49,19 +49,18 @@ export default function ProductList() {
         }
 
         dispatch(updateCart(cartRes.data));
-
         dispatch(removeLoading(loadingKey));
 
         // 最終顯示新增成功信息
         alertHandler('success', newCartRes.message);
     };
+
     // 更新商品列表
     const updateProductList = async () => {
         const loadingKey = new Date().getTime().toString();
         dispatch(addLoading(loadingKey));
 
         const productRes =  await getAllProduct();
-
         const { products = [], success = false } = productRes
 
         if (success) {
@@ -76,7 +75,7 @@ export default function ProductList() {
                 }
             
             }, {});
-            console.log('productObj', productObj)
+
             setCategoryProductData(productObj);
             setCategoryList(Object.keys(productObj));
         }
@@ -84,7 +83,6 @@ export default function ProductList() {
         dispatch(removeLoading(loadingKey));
     }; 
 
-    // 如果 篩選資料 有變動，則重新取得商品列表
     useEffect(() => {
         updateProductList();
     }, [])

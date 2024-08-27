@@ -8,7 +8,7 @@ import productInterface from "@/interface/products";
 
 interface ProductCardProps {
     productInfo: productInterface,
-    className: string,
+    className?: string,
     updateCartList: () => void,
 }
 

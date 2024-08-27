@@ -52,7 +52,10 @@ module.exports = {
         ring: "var(--ring)",
         background: "var(--background)",
         foreground: "var(--foreground)",
-        disabled: "var(--disabled)",
+        disabled: {
+          DEFAULT: "var(--disabled)",
+          foreground: "var(--disabled-foreground)",
+        },
         confirm: {
           DEFAULT: "var(--confirm)",
           foreground: "var(--confirm-foreground)",

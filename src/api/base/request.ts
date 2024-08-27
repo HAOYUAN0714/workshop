@@ -8,7 +8,6 @@ export interface optionProps {
 // 整理請求資料
 const getRequestInfo = (url: string, method: string, options: optionProps) => {
     const { params = null, path = '', isFormData = false } = options;
-
     const baseUrl = `${import.meta.env.VITE_API_URL}/v2/api/${import.meta.env.VITE_API_PATH}/${url}/${path}`
 
     // Get 參數要放到 url ? 後面

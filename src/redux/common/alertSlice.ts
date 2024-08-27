@@ -16,7 +16,6 @@ const initialState: stateInterface = {
     alertInfoArray: [],
 }
 
-
 export const alertSlice = createSlice({
     name: 'alert',
     initialState,

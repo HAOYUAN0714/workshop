@@ -21,7 +21,6 @@ export default function Dashboard() {
     const dispatch = useDispatch();
     const loadingState = useSelector(loadingQueue);
     const alertList = useSelector(alertInfoArray);
-
     const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
 
     const handleThemeSwitch = () => {
@@ -67,7 +66,7 @@ export default function Dashboard() {
 
     return (
         <div id="admin-dashboard" className="w-full flex flex-col h-screen bg-background">
-            <div id="top-alert-list" className='z-50 fixed top-1 right-1 w-[275px]'>
+            <div id="top-alert-list" className='z-50 fixed top-16 right-1 w-[275px]'>
                 {alertList.map((alertInfo) => (
                     <AlertDestructive
                         id={alertInfo.id}

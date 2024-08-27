@@ -46,6 +46,7 @@ export default function CouponModal({
     alertHandler,
 }: modalProps) {
     const dispatch = useDispatch();
+
     // 新增商品初始化資料
     const initCoupon = {
         title: '',
@@ -56,7 +57,6 @@ export default function CouponModal({
     };
 
     const [couponInfo, setCouponInfo] = useState({...initCoupon});
-
     const [selectedDate, setSelectedDate] = useState(0);
 
     const selectDateHandler = (date: number) => {
@@ -67,18 +67,7 @@ export default function CouponModal({
         defaultValues: { ...initCoupon },
         values: couponInfo,
     });
-
-    // 觸發 新增/編輯 商品打開彈窗時，初始化商品資料
-    useEffect(() => {
-        modalType === 'edit'
-            ? setCouponInfo({
-                ...initCoupon,
-                ...createdCouponInfo,
-                is_enabled: Boolean(createdCouponInfo?.is_enabled),
-            })
-            : setCouponInfo({...initCoupon});
-    }, [modalType]);  
-
+ 
     // 表單各編輯項目事件處理
     const handleChange = (e: React.SyntheticEvent) => {
         const { value, name } = (e.target as HTMLInputElement);
@@ -102,7 +91,7 @@ export default function CouponModal({
     const onSubmit = async() => {
         const loadingKey = new Date().getTime().toString();
         dispatch(addLoading(loadingKey));
-
+        
         const productParams = {
             data: { ...couponInfo, due_date: selectedDate, is_enabled: Number(couponInfo.is_enabled)}
         };
@@ -125,10 +114,21 @@ export default function CouponModal({
             await updateCouponList();
             modalTriggerHandler();
         }
-        dispatch(removeLoading(loadingKey));
 
+        dispatch(removeLoading(loadingKey));
         alertHandler(res.success ? 'success' : 'error', res.message);
     };
+
+    // 觸發 新增/編輯 商品打開彈窗時，初始化商品資料
+    useEffect(() => {
+        modalType === 'edit'
+            ? setCouponInfo({
+                ...initCoupon,
+                ...createdCouponInfo,
+                is_enabled: Boolean(createdCouponInfo?.is_enabled),
+            })
+            : setCouponInfo({...initCoupon});
+    }, [modalType]); 
 
     return (
         modalType === 'delete'

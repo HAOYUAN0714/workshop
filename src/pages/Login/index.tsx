@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { login } from '@/api/admin/user';
+import { alertInfoArray, addAlert, removeAlert } from '@/redux/common/alertSlice';
 import AlertDestructive from '@/components/common/alertDestructive/index'
 
 // 使用 zod 定義表單型別與驗證規則
@@ -27,12 +28,16 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
+    const dispatch = useDispatch();
     const navigate= useNavigate();
+    const alertList = useSelector(alertInfoArray);
 
-    const [alertInfo, setAlertInfo] = useState({
-        alertType: '',
-        message: '',
-    });
+    // 顯示 alert
+    const alertHandler = (alertType: string, message: string) => {
+        const id = new Date().getTime().toString()
+        dispatch(addAlert({ id, alertType, message }));
+        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
+    }
    
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -47,8 +52,7 @@ export default function Login() {
         login(userInfo).then(() => {
             navigate('/admin');
         }).catch((errorInfo) => {
-            const { error = {}, message: statusMessage = '' } = errorInfo;
-
+            const { error = {} } = errorInfo;
             const { code = ''} = error;
 
             let errorMessage = '';
@@ -61,14 +65,11 @@ export default function Login() {
                     errorMessage = ' : 使用者不存在';
                     break;
                 default:
-                    errorMessage = '';
+                    errorMessage = '登入失敗';
                     break;
             }
 
-            setAlertInfo({
-                alertType: 'error',
-                message: `${statusMessage}${errorMessage}`,
-            })
+            alertHandler('error', errorMessage);
         });
     }
 
@@ -82,7 +83,18 @@ export default function Login() {
             className="w-full h-screen flex flex-col justify-center items-center mr-auto ml-auto"
             style={{width: '20rem'}}
         >
-            <AlertDestructive alertType={alertInfo.alertType} message={alertInfo.message}/>
+            <div id="top-alert-list" className='z-50 fixed top-16 right-1 w-[275px]'>
+                {alertList.map((alertInfo) => (
+                    <AlertDestructive
+                        id={alertInfo.id}
+                        title={alertInfo.title}
+                        alertType={alertInfo.alertType}
+                        message={alertInfo.message}
+                        key={alertInfo.id}
+                        className='mb-2'
+                    />
+                ))}
+            </div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit, onError)} className='w-full space-y-8 pt-5' >
                     <FormField
@@ -92,7 +104,7 @@ export default function Login() {
                             <FormItem>
                                 <FormLabel>帳號</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='' {...field} />
+                                    <Input placeholder='' {...field} required/>
                                 </FormControl>
                                 <FormMessage>
                                     { form.formState.errors.username?.message || '' } 
@@ -107,7 +119,7 @@ export default function Login() {
                             <FormItem>
                                 <FormLabel>密碼</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='' {...field} />
+                                    <Input placeholder='' {...field} required/>
                                 </FormControl>
                                 <FormMessage>
                                     { form.formState.errors.password?.message || '' }

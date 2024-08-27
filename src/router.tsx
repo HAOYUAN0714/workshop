@@ -11,7 +11,7 @@ import ProductList from './pages/customer/ProductList';
 import Product from './pages/customer/Product';
 import Cart from './pages/customer/Cart';
 import Checkout from './pages/customer/Checkout';
-import OrderResult from './pages/customer/OrderResult';
+import Order from './pages/customer/Order';
 import FullLoading from './components/common/fullLoading';
 
 // 路由守衛
@@ -78,7 +78,29 @@ const RouterGuard: React.FC<{ children: JSX.Element }>  = ({
     return children;
 };
 
+const FrontGuard: React.FC<{ children: JSX.Element }>  = ({
+    children,
+}) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        (async() => {
+            if (location.pathname === '/') {
+                navigate('/products');
+            }
+        })()
+    }, [location, navigate]);
+
+    return children;
+};
+
+
 const router = createHashRouter([
+    {
+        path: '*',
+        element: <Navigate to="/" />
+    },
     {
         // 後台
         path: '/admin',
@@ -119,33 +141,37 @@ const router = createHashRouter([
     },
     {
         // 前台客端
-        path: '/customer',
-        element: <FrontContainer />,
+        path: '/',
+        element: (
+            <FrontGuard>
+                <FrontContainer />
+            </FrontGuard>
+        ),
         children: [
             {
                 // 產品列表
-                path: '/customer/products',
+                path: '/products',
                 element: <ProductList />,
             },
             {
                 // 產品詳細資料
-                path: '/customer/product:id',
+                path: '/product:id',
                 element: <Product />,
             },
             {
                 // 購物車
-                path: '/customer/cart',
+                path: '/cart',
                 element: <Cart />,
             },
             {
                 // 訂單確認
-                path: '/customer/checkout',
+                path: '/checkout',
                 element: <Checkout />,
             },
             {
                 // 下訂結果
-                path: '/customer/orderResult:status',
-                element: <OrderResult />,
+                path: '/order/:id',
+                element: <Order />,
             }, 
         ],
     },

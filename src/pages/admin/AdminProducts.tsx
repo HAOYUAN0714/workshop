@@ -20,9 +20,7 @@ import { addAlert, removeAlert } from "@/redux/common/alertSlice";
 
 export default function AdminProducts() {
     const dispatch = useDispatch();
-
     const [productList, setProductList] = useState([]);
-
     const [isUpdated, setIsUpdated] = useState(false);
 
     const [pagination, setPagination] = useState({
@@ -35,18 +33,14 @@ export default function AdminProducts() {
     });
 
     const [productFilter, setProductFilter] = useState({ page: '1', category: '' });
-    
     const [editProductInfo, setEditProductInfo] = useState({});
-
     const [modalType, setModalType] = useState('');
-
     const [categoryList, setCategoryList] = useState<string[]>([]); // 分類列表
 
     // 從 productList 更新分類
     const updateCategoryList = async() => {
         // 取得全部商品列表 , 只有在初始化時或者新增的商品中出現新的類別才做更新
         const res = await getAllProduct();
-
         const allProductList = Object.values(res.products) as productInterface[];
 
         if (res.success) {
@@ -69,7 +63,6 @@ export default function AdminProducts() {
         }
 
         setIsUpdated(true);
-
         dispatch(removeLoading(loadingKey));
     };
 

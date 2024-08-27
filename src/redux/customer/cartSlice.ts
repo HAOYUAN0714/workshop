@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import CartInfoInterface  from '@/interface/carts';
 
-
 export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
@@ -12,10 +11,13 @@ export const cartSlice = createSlice({
         updateCart: (state, action: PayloadAction<CartInfoInterface>) => {
             state.cartData = action.payload;
         },
+        clearCart: (state) => {
+            state.cartData = {} as CartInfoInterface;
+        }
     },
 })
 
-export const { updateCart} = cartSlice.actions;
+export const { updateCart, clearCart } = cartSlice.actions;
 
 export const cartData = (state: RootState) => state.cartSlice.cartData;
 

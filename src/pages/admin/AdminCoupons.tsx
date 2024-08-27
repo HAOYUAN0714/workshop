@@ -22,9 +22,7 @@ import { addAlert, removeAlert } from "@/redux/common/alertSlice";
 
 export default function AdminOrders() {
     const dispatch = useDispatch();
-
     const [isUpdated, setIsUpdated] = useState(false);
-
     const [couponList, setCouponList] = useState([]);
 
     const [pagination, setPagination] = useState({
@@ -37,9 +35,7 @@ export default function AdminOrders() {
     });
 
     const [couponFilter, setCouponFilter] = useState({ page: '1' });
-
     const [editCouponInfo, setEditCouponInfo] = useState({});
-
     const [modalType, setModalType] = useState('');
 
     const updateCouponList = async () => {
@@ -64,17 +60,15 @@ export default function AdminOrders() {
         const loadingKey = new Date().getTime().toString();
         dispatch(addLoading(loadingKey));
 
-        const { id: couponId = '', ...newCoupon } = couponInfo;
+        const { id: path = '', ...newCoupon } = couponInfo;
 
         // 商邊開關
         newCoupon.is_enabled =  Number(!newCoupon.is_enabled); 
         
-        const updateRes = await updateCoupon({ params: { data: newCoupon }, path: couponId });
-        // 更新成功後重新取得商品列表
+        const updateRes = await updateCoupon({ params: { data: newCoupon }, path });
         updateRes?.success && await updateCouponList();
 
         dispatch(removeLoading(loadingKey));
-
         alertHandler(updateRes.success ? 'success' : 'error', updateRes.message);
     };
 

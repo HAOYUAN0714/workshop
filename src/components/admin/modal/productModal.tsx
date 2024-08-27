@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { useDispatch } from 'react-redux'
+import { useState, useEffect } from "react";
+import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Button } from "@/components/ui/button"
 import ConfirmModal from "@/components/common/modal/confirmationModal";
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
     Form,
     FormControl,
@@ -24,12 +24,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import productInterface from "@/interface/products"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
-import { createProduct, updateProduct, uploadImg, deleteProduct } from "@/api/admin/products"
+} from "@/components/ui/select";
+import productInterface from "@/interface/products";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { createProduct, updateProduct, uploadImg, deleteProduct } from "@/api/admin/products";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 
 type modalProductInterface = Partial<productInterface>;
@@ -105,7 +105,8 @@ export default function ProductModal({
                 : value,
         });
     };
-    // 表單各編輯項目事件處理
+
+    // 選擇表單事件處理
     const handleSelect = (selectValue: string) => {
         // 分類優先使用自訂分類的值
         setProductInfo({
@@ -134,7 +135,6 @@ export default function ProductModal({
         dispatch(addLoading(loadingKey));
 
         const { files = [] } = (e.target as HTMLInputElement);
-
         const formData = new FormData();
 
         const file = files?.length
@@ -142,7 +142,7 @@ export default function ProductModal({
             : ''; 
 
         formData.append('file-to-upload', file);
-
+        
         const imgUrlRes = await uploadImg({ params: formData});
 
         const imgUrl = imgUrlRes?.success
@@ -192,8 +192,8 @@ export default function ProductModal({
             enableNewCategory && await updateCategoryList();
             modalTriggerHandler();
         }
-        dispatch(removeLoading(loadingKey));
 
+        dispatch(removeLoading(loadingKey));
         alertHandler(res.success ? 'success' : 'error', res.message);
     };
 

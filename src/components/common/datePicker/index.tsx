@@ -20,9 +20,7 @@ export default function DatePicker({
     formateString = 'yyyy-MM-dd',
     selectDateHandler = () => {}
 }: dateProps) {
-
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-
 
     useEffect(() => {
         setSelectedDate(new Date(dateTimestamp));
