@@ -7,4 +7,3 @@ import { useCouponInterface } from '@/interface/customer/coupons';
 * @code string, 優惠碼
 */ 
 export const useCoupon = (options: useCouponInterface) => request('coupon', 'POST', options);
-
