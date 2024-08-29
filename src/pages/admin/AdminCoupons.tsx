@@ -17,7 +17,7 @@ import NoDataHint from '@/components/common/noDataHint';
 import PageSet from "@/components/common/pageSet";
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
-import couponInterface from "@/interface/base/coupons"
+import { Coupon as couponInterface } from "@/interface/base/coupons"
 
 export default function AdminOrders() {
     const dispatch = useDispatch();
@@ -51,7 +51,6 @@ export default function AdminOrders() {
             }
 
             setIsUpdated(true);
-
             dispatch(removeLoading(loadingKey));
     };
 

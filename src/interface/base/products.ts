@@ -1,4 +1,4 @@
-export interface CustomerProductInterface {
+interface CustomerProductInterface {
     title: string,
     category: string,
     content: string,
@@ -30,7 +30,7 @@ export const createProduct = (): CustomerProductInterface => {
     };
 };
 
-export default interface Product {
+interface Product {
     title: string,
     category: string,
     content: string,
@@ -43,4 +43,9 @@ export default interface Product {
     unit: string, // 商品單位
     imageUrl: string, // 主要圖片網址
     imagesUrl?: string[], // 其他圖片網址
+}
+
+export type {
+    Product,
+    CustomerProductInterface
 }

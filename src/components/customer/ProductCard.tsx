@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import productInterface from "@/interface/base/products";
+import { Product as productInterface } from "@/interface/base/products";
 
 interface ProductCardProps {
     productInfo: productInterface,

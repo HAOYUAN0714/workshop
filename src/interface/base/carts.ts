@@ -1,6 +1,6 @@
-import Coupon from './coupons';
+import { Coupon } from './coupons';
 
-export interface CartProduct {
+interface CartProduct {
     category: string,
     content: string,
     description: string,
@@ -15,7 +15,7 @@ export interface CartProduct {
     unit: string,
 }
 
-export interface Cart {
+interface Cart {
     id: string,
     coupon?: Coupon,
     product: CartProduct,
@@ -25,8 +25,14 @@ export interface Cart {
     final_total: number,
 }
 
-export default interface CartInfo {
+interface CartInfo {
     carts: Cart[],
     total: number,
     final_total: number,
+}
+
+export type {
+    Cart,
+    CartProduct,
+    CartInfo
 }

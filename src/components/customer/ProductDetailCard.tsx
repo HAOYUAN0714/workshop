@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import OrderInterface, { OrderProductInterface } from "@/interface/base/orders"
+import { Orders as OrderInterface, OrderProductInterface } from "@/interface/base/orders"
 
 interface ProductDetailCardProps {
     orderInfo: OrderInterface

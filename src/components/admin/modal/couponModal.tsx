@@ -19,7 +19,7 @@ import {
     FormItem,
     FormLabel,
 } from '@/components/ui/form';
-import couponInterface from "@/interface/base/coupons"
+import { Coupon as couponInterface } from "@/interface/base/coupons"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { createCoupon, updateCoupon, deleteCoupon } from '@/api/admin/coupons';

@@ -1,5 +1,5 @@
 import { CustomerProductInterface } from './products'
-export interface OrderProductInterface {
+interface OrderProductInterface {
     product: CustomerProductInterface,
     final_total: number,
     id: string,
@@ -42,4 +42,7 @@ export const createOrders = (): Orders => { // 建立訂單預設值
     };
 };
 
-export default Orders 
+export type {
+    Orders,
+    OrderProductInterface
+}
