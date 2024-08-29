@@ -13,6 +13,23 @@ export interface CustomerProductInterface {
     imagesUrl?: string[], // 其他圖片網址
 }
 
+export const createProduct = (): CustomerProductInterface => {
+    return {
+        title: '',
+        category: '',
+        content: '',
+        description: '',
+        id: '',
+        is_enabled: 0,
+        origin_price: 0,
+        num: 0,
+        price: 0,
+        unit: '',
+        imageUrl: '',
+        imagesUrl: []
+    };
+};
+
 export default interface Product {
     title: string,
     category: string,

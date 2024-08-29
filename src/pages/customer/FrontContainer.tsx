@@ -6,12 +6,15 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { RootState } from '@/redux/store';
 import { setTheme } from '@/redux/common/userSettingSlice';
-import { loadingQueue } from '@/redux/common/loadingSlice';
+import { updateCart } from '@/redux/customer/cartSlice';
+import { loadingQueue, addLoading, removeLoading } from '@/redux/common/loadingSlice';
+import { addAlert, removeAlert } from '@/redux/common/alertSlice';
 import { cartData } from '@/redux/customer/cartSlice';
 import { alertInfoArray } from '@/redux/common/alertSlice';
 import AlertDestructive from '@/components/common/alertDestructive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { getCart } from '@/api/customer/cart';
 
 export default function Dashboard() {
     const dispatch = useDispatch();
@@ -25,21 +28,49 @@ export default function Dashboard() {
         dispatch(setTheme(theme === 'dark' ? '' : 'dark'));
     }
 
+    // 顯示 alert
+    const alertHandler = (alertType: string, message: string) => {
+        const id = new Date().getTime().toString()
+        dispatch(addAlert({ id, alertType, message }));
+        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
+    }
+
+    // 更新購物車
+    const updateCartList = async() => {
+        const loadingKey = new Date().getTime().toString();
+        dispatch(addLoading(loadingKey));
+
+        const cartRes = await getCart({});
+
+        if (!cartRes?.success) {
+            alertHandler('error', cartRes?.message || '購物車更新失敗');
+            dispatch(removeLoading(loadingKey));
+            return;
+        }
+
+        dispatch(updateCart(cartRes.data));
+        dispatch(removeLoading(loadingKey));
+    };
+
     useEffect(() => {
         setIsLoading(!!Object.keys(loadingState).length);
     }, [loadingState])
 
+    useEffect(() => {
+        updateCartList();
+    }, []);
+
     return (
-        <div id="admin-dashboard" className="w-full flex flex-col h-screen bg-background">
+        <div id="front-container" className="w-full flex flex-col  bg-background">
             <div id="top-alert-list" className='z-50 fixed top-16 right-1 w-[275px]'>
                 {alertList.map((alertInfo) => (
                     <AlertDestructive
                         id={alertInfo.id}
+                        className='mb-2'
                         title={alertInfo.title}
                         alertType={alertInfo.alertType}
                         message={alertInfo.message}
                         key={alertInfo.id}
-                        className='mb-2'
                     />
                 ))}
             </div>

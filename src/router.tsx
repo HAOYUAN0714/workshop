@@ -155,7 +155,7 @@ const router = createHashRouter([
             },
             {
                 // 產品詳細資料
-                path: '/product:id',
+                path: '/product/:id',
                 element: <Product />,
             },
             {

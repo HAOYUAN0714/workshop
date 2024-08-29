@@ -8,6 +8,8 @@ import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { updateCart } from '@/redux/customer/cartSlice';
 import { CustomerProductInterface } from "@/interface/products";
 import ProductCard from '@/components/customer/ProductCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTag } from '@fortawesome/free-solid-svg-icons';
 
 type CategoryProductData = {
     [category: string]: CustomerProductInterface[];
@@ -115,8 +117,9 @@ export default function ProductList() {
                         name={`${category}-section`}
                         key={category}
                     >
-                        <div className="text-xl my-6">
+                        <div className="my-6 text-xl text-primary">
                             {category}
+                            <FontAwesomeIcon className='ml-2 text-success' icon={faTag} />
                         </div>
                         <div className="flex flex-wrap">
                             { categoryProductData[category].map((product: CustomerProductInterface) => {

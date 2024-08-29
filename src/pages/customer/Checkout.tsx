@@ -96,10 +96,7 @@ export default function Checkout() {
         }
 
         dispatch(clearCart()); // 清空購物車
-        console.log('cartState', cartState)
-        console.log('navigate', `/order/${ res.orderId }`)
         navigate(`/order/${ res.orderId }`, { replace: true });
-        
         dispatch(removeLoading(loadingKey));
     };
 
