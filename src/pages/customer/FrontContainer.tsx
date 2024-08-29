@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAlert } from "@/hook/useAlert";
 import { Outlet, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import FullLoading from '@/components/common/fullLoading';
@@ -8,7 +9,6 @@ import { RootState } from '@/redux/store';
 import { setTheme } from '@/redux/common/userSettingSlice';
 import { updateCart } from '@/redux/customer/cartSlice';
 import { loadingQueue, addLoading, removeLoading } from '@/redux/common/loadingSlice';
-import { addAlert, removeAlert } from '@/redux/common/alertSlice';
 import { cartData } from '@/redux/customer/cartSlice';
 import { alertInfoArray } from '@/redux/common/alertSlice';
 import AlertDestructive from '@/components/common/alertDestructive';
@@ -18,6 +18,7 @@ import { getCart } from '@/api/customer/cart';
 
 export default function Dashboard() {
     const dispatch = useDispatch();
+    const showAlert = useAlert();
     const loadingState = useSelector(loadingQueue);
     const cartState = useSelector(cartData);
     const alertList = useSelector(alertInfoArray);
@@ -28,13 +29,6 @@ export default function Dashboard() {
         dispatch(setTheme(theme === 'dark' ? '' : 'dark'));
     }
 
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString()
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
-
     // 更新購物車
     const updateCartList = async() => {
         const loadingKey = new Date().getTime().toString();
@@ -43,7 +37,7 @@ export default function Dashboard() {
         const cartRes = await getCart({});
 
         if (!cartRes?.success) {
-            alertHandler('error', cartRes?.message || '購物車更新失敗');
+            showAlert('error', cartRes?.message || '購物車更新失敗');
             dispatch(removeLoading(loadingKey));
             return;
         }

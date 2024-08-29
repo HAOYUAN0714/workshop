@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useAlert } from "@/hook/useAlert";
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteCartProduct, getCart, updateCartProduct } from '@/api/customer/cart';
-import { addAlert, removeAlert } from "@/redux/common/alertSlice";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { cartData, updateCart } from '@/redux/customer/cartSlice';
 import { Cart as CartInterface } from '@/interface/carts';
@@ -15,19 +15,13 @@ interface loadingQueueInterface {
 
 export default function ProductList() {
     const dispatch = useDispatch();
+    const showAlert = useAlert();
     const cartState = useSelector(cartData);
     const [cartList, setCartList] = useState<CartInterface[]>([]); // 購物車列表
     const [totalPay, setTotalPay] = useState(0); // 總金額
     const [submiDisabled, setSubmitDisabled] = useState(false); // 送出按鈕是否禁用
     const [submitTxt, setSubmitTxt] = useState('確認送出'); // 送出按鈕文字
     const [updatingProduct, setUpdatingProduct] = useState<loadingQueueInterface>({});
-
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString()
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
 
     // 更新購物車
     const getCartList = async(isInit = false) => {
@@ -37,7 +31,7 @@ export default function ProductList() {
         const cartRes = await getCart({});
 
         if (!cartRes?.success) {
-            alertHandler('error', cartRes?.message || '取得/更新購物車資料失敗');
+            showAlert('error', cartRes?.message || '取得/更新購物車資料失敗');
             dispatch(removeLoading(loadingKey));
             return;
         } 

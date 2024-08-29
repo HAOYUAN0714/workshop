@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useAlert } from "@/hook/useAlert";
 import { getProductDetail } from "@/api/customer/products";
 import { updateCartProduct, getCart, addCart } from '@/api/customer/cart';
 import { cartData, updateCart } from "@/redux/customer/cartSlice";
-import { addAlert, removeAlert } from "@/redux/common/alertSlice";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { CustomerProductInterface, createProduct } from "@/interface/products";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,17 +21,11 @@ import {
 export default function Product() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const showAlert = useAlert();
     const cartState = useSelector(cartData);
     const { id: productId = '' } = useParams();
     const [productInfo, setProductInfo] = useState<CustomerProductInterface>(createProduct());
     const [selectedQty, setSelectedQty] = useState('1');
-
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString()
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
 
     const handleChange = (value: string) => {
         Number(value) > 0 && setSelectedQty(value);
@@ -65,7 +59,7 @@ export default function Product() {
             : await addCart({ params });
 
         if (!res?.success) {
-            alertHandler('error', res?.message || '購物車更新失敗');
+            showAlert('error', res?.message || '購物車更新失敗');
             return;
         }
 
@@ -73,13 +67,13 @@ export default function Product() {
         const cartRes = await getCart({});
 
         if (!cartRes?.success) {
-            alertHandler('error', cartRes?.message || '購物車更新失敗');
+            showAlert('error', cartRes?.message || '購物車更新失敗');
             return;
         }
 
         dispatch(updateCart(cartRes.data));
         dispatch(removeLoading('addCartHandler'));
-        alertHandler('success', res.message);
+        showAlert('success', res.message);
     };
 
     useEffect(() => {

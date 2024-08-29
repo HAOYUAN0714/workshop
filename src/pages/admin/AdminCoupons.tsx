@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
+import { useAlert } from "@/hook/useAlert";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { format } from "date-fns"
 import { getCouponList, updateCoupon } from '@/api/admin/coupons';
@@ -17,11 +18,10 @@ import PageSet from "@/components/common/pageSet";
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import couponInterface from "@/interface/coupons"
-import { addAlert, removeAlert } from "@/redux/common/alertSlice";
-
 
 export default function AdminOrders() {
     const dispatch = useDispatch();
+    const showAlert = useAlert();
     const [isUpdated, setIsUpdated] = useState(false);
     const [couponList, setCouponList] = useState([]);
 
@@ -69,15 +69,8 @@ export default function AdminOrders() {
         updateRes?.success && await updateCouponList();
 
         dispatch(removeLoading(loadingKey));
-        alertHandler(updateRes.success ? 'success' : 'error', updateRes.message);
+        showAlert(updateRes.success ? 'success' : 'error', updateRes.message);
     };
-
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString()
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
 
     // 切換分頁
     const handlePageChange = (page: number) => {
@@ -102,7 +95,6 @@ export default function AdminOrders() {
                 modalTriggerHandler={() => modalTriggerHandler('')}
                 createdCouponInfo={editCouponInfo}
                 updateCouponList={updateCouponList}
-                alertHandler={alertHandler}
             />
             <h2 className="flex flex-none items-center border-b-2 border-b-border h-16 text-2xl">
                 優惠券列表

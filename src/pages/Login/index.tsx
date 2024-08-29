@@ -1,6 +1,6 @@
 'use client';
-
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useAlert } from '@/hook/useAlert';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { login } from '@/api/admin/user';
-import { alertInfoArray, addAlert, removeAlert } from '@/redux/common/alertSlice';
+import { alertInfoArray } from '@/redux/common/alertSlice';
 import AlertDestructive from '@/components/common/alertDestructive/index'
 
 // 使用 zod 定義表單型別與驗證規則
@@ -28,17 +28,9 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
-    const dispatch = useDispatch();
     const navigate= useNavigate();
     const alertList = useSelector(alertInfoArray);
 
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString()
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
-   
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -69,7 +61,7 @@ export default function Login() {
                     break;
             }
 
-            alertHandler('error', errorMessage);
+            useAlert('error', errorMessage);
         });
     }
 

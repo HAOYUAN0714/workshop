@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { useAlert } from "@/hook/useAlert";
 import { Button } from "@/components/ui/button"
 import ConfirmModal from "@/components/common/modal/confirmationModal";
 import {
@@ -43,7 +44,6 @@ interface modalProps {
     modalTriggerHandler: () => void;
     updateProductList: () => void;
     updateCategoryList: () => void;
-    alertHandler: (alertType: string, message: string) => void;
     categoryList: string[];
 }
 
@@ -55,10 +55,10 @@ export default function ProductModal({
     modalTriggerHandler,
     updateProductList,
     updateCategoryList,
-    alertHandler,
     categoryList,
 }: modalProps) {
     const dispatch = useDispatch();
+    const showAlert = useAlert();
     // 新增商品初始化資料
     const initProduct = {
         title: '',
@@ -194,7 +194,7 @@ export default function ProductModal({
         }
 
         dispatch(removeLoading(loadingKey));
-        alertHandler(res.success ? 'success' : 'error', res.message);
+        showAlert(res.success ? 'success' : 'error', res.message);
     };
 
     return (

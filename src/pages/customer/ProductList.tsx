@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useAlert } from '@/hook/useAlert';
 import { Link , Element } from 'react-scroll';
 import { useDispatch } from 'react-redux'
 import { getAllProduct } from '@/api/customer/products';
 import { addCart, getCart } from '@/api/customer/cart';
-import { addAlert, removeAlert } from "@/redux/common/alertSlice";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { updateCart } from '@/redux/customer/cartSlice';
 import { CustomerProductInterface } from "@/interface/products";
@@ -17,15 +17,9 @@ type CategoryProductData = {
 
 export default function ProductList() {
     const dispatch = useDispatch();
+    const showAlert = useAlert();
     const [categoryProductData, setCategoryProductData] = useState<CategoryProductData>({});
     const [categoryList, setCategoryList] = useState<string[]>([]); // 分類列表
-
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString()
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
 
     // 更新購物車
     const updateCartList = async(product_id: string, qty: number) => {
@@ -36,7 +30,7 @@ export default function ProductList() {
 
         // 新增失敗的話直接 return
         if (!newCartRes?.success) {
-            alertHandler('error', newCartRes?.message || '購物車新增失敗');
+            showAlert('error', newCartRes?.message || '購物車新增失敗');
             dispatch(removeLoading(loadingKey));
             return;
         }
@@ -45,7 +39,7 @@ export default function ProductList() {
         const cartRes = await getCart({});
 
         if (!cartRes?.success) {
-            alertHandler('error', cartRes?.message || '購物車更新失敗');
+            showAlert('error', cartRes?.message || '購物車更新失敗');
             dispatch(removeLoading(loadingKey));
             return;
         }
@@ -54,7 +48,7 @@ export default function ProductList() {
         dispatch(removeLoading(loadingKey));
 
         // 最終顯示新增成功信息
-        alertHandler('success', newCartRes.message);
+        showAlert('success', newCartRes.message);
     };
 
     // 更新商品列表

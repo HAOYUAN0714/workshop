@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; 
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "@/hook/useAlert";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,8 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { postOrders } from "@/api/customer/orders";
 import { addLoading, removeLoading } from "@/redux/common/loadingSlice";
-import { addAlert, removeAlert } from "@/redux/common/alertSlice";
-import { clearCart, cartData } from '@/redux/customer/cartSlice';
+import { clearCart } from '@/redux/customer/cartSlice';
 
 // 使用 zod 定義表單型別與驗證規則
 const orderSchema = z.object({
@@ -43,7 +43,7 @@ interface basicInfoInterface {
 export default function Checkout() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const cartState = useSelector(cartData);
+    const showAlert = useAlert();
 
     const [checkoutData, setCheckoutData] = useState({
         email: '',
@@ -68,13 +68,6 @@ export default function Checkout() {
         });
     };
 
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString();
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
-
     const onSubmit = async(submitData: basicInfoInterface) => {
         const loadingKey = new Date().getTime().toString();
         dispatch(addLoading(loadingKey));
@@ -90,7 +83,7 @@ export default function Checkout() {
         const res = await postOrders({ params });
 
         if (!res?.success) {
-            alertHandler('error', res?.message || '訂單建立失敗');
+            showAlert('error', res?.message || '訂單建立失敗');
             dispatch(removeLoading(loadingKey));
             return;
         }

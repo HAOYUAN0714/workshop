@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form';
+import { useAlert } from "@/hook/useAlert";
 import { Button } from "@/components/ui/button"
 import ConfirmModal from "@/components/common/modal/confirmationModal";
 import DatePicker from "@/components/common/datePicker";
@@ -34,7 +35,6 @@ interface modalProps {
     createdCouponInfo?: modalProductInterface;
     modalTriggerHandler: () => void;
     updateCouponList: () => void;
-    alertHandler: (alertType: string, message: string) => void;
 }
 
 export default function CouponModal({
@@ -43,9 +43,9 @@ export default function CouponModal({
     createdCouponInfo,
     modalTriggerHandler,
     updateCouponList,
-    alertHandler,
 }: modalProps) {
     const dispatch = useDispatch();
+    const showAlert = useAlert();
 
     // 新增商品初始化資料
     const initCoupon = {
@@ -116,7 +116,7 @@ export default function CouponModal({
         }
 
         dispatch(removeLoading(loadingKey));
-        alertHandler(res.success ? 'success' : 'error', res.message);
+        showAlert(res.success ? 'success' : 'error', res.message);
     };
 
     // 觸發 新增/編輯 商品打開彈窗時，初始化商品資料

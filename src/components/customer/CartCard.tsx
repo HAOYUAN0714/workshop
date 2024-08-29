@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -29,10 +30,18 @@ export default function CartCard({
     handleSelect,
     handleDelete,
 }: CartCardProps) {
+    const [selectList, setSelectList] = useState(Array.from({ length: 10 }, (v, i) => i + 1));
 
     const updateSelect = (selectVal: string) => {
         handleSelect(cartInfo , Number(selectVal))
     };
+
+    useEffect(() => {
+        // 設定選擇數量的選項 , 如果超過 10 可選最大數量 + 3
+        cartInfo.qty > 10
+            ?   setSelectList(Array.from({ length: cartInfo.qty + 3 }, (v, i) => i + 1))
+            :   setSelectList(Array.from({ length: 10 }, (v, i) => i + 1));
+    }), [cartInfo];
 
     return <Card className={`w-full h-[150px] rounded-md ${className}`}>
         <CardContent className="relative flex w-full h-full p-0">
@@ -72,7 +81,7 @@ export default function CartCard({
                             <SelectValue placeholder="選擇數量" />
                         </SelectTrigger>
                         <SelectContent>
-                            { Array.from({ length: 10 }, (v, i) => i + 1).map((num) => {
+                            { selectList.map((num) => {
                                 return (
                                     <SelectItem value={`${num}`} key={num}>{num}</SelectItem>
                                 )

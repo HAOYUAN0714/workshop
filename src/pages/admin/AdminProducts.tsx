@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
+import { useAlert } from "@/hook/useAlert";
 import {
   Table,
   TableBody,
@@ -16,10 +17,10 @@ import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { getProductList, updateProduct, getAllProduct } from "@/api/admin/products"
 import productInterface from "@/interface/products"
-import { addAlert, removeAlert } from "@/redux/common/alertSlice";
 
 export default function AdminProducts() {
     const dispatch = useDispatch();
+    const showAlert = useAlert();
     const [productList, setProductList] = useState([]);
     const [isUpdated, setIsUpdated] = useState(false);
 
@@ -82,15 +83,8 @@ export default function AdminProducts() {
 
         dispatch(removeLoading(loadingKey));
 
-        alertHandler(updateRes?.success ? 'success' : 'error', updateRes.message || '商品更新失敗');
+        showAlert(updateRes?.success ? 'success' : 'error', updateRes.message || '商品更新失敗');
     };
-
-    // 顯示 alert
-    const alertHandler = (alertType: string, message: string) => {
-        const id = new Date().getTime().toString()
-        dispatch(addAlert({ id, alertType, message }));
-        setTimeout(() => dispatch(removeAlert(id)), 3000); // 顯示３秒後消失
-    }
 
     // 切換分頁
     const handlePageChange = (page: number) => {
@@ -122,7 +116,6 @@ export default function AdminProducts() {
                 createdProductInfo={editProductInfo}
                 updateProductList={updateProductList}
                 updateCategoryList={updateCategoryList}
-                alertHandler={alertHandler}
                 categoryList={categoryList}
             />
             <h2 className="flex flex-none items-center border-b-2 border-b-border h-16 text-2xl">
