@@ -4,7 +4,7 @@ export interface CustomerProductInterface {
     content: string,
     description: string,
     id: string, // 商品 ID , 客戶端商品皆有完整資料
-    is_enabled: number | boolean, // 是否啟用 , 1: 啟用 , 0: 未啟用
+    is_enabled: number, // 是否啟用 , 1: 啟用 , 0: 未啟用
     origin_price: number, // 原價
     num: number,
     price: number, // 現價
@@ -36,7 +36,7 @@ export default interface Product {
     content: string,
     description: string,
     id?: string, // 商品 ID , 非已存在的商品不需帶入
-    is_enabled: number | boolean, // 是否啟用 , 1: 啟用 , 0: 未啟用
+    is_enabled: number, // 是否啟用 , 1: 啟用 , 0: 未啟用
     origin_price: number, // 原價
     num?: number,
     price: number, // 現價

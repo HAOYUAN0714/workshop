@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import productInterface from "@/interface/products";
+import productInterface from "@/interface/base/products";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -143,7 +143,7 @@ export default function ProductModal({
 
         formData.append('file-to-upload', file);
         
-        const imgUrlRes = await uploadImg({ params: formData});
+        const imgUrlRes = await uploadImg({ params: formData });
 
         const imgUrl = imgUrlRes?.success
             ? imgUrlRes.imageUrl
@@ -169,7 +169,8 @@ export default function ProductModal({
                 ...apiParams,
                 category: enableNewCategory
                     ? new_category
-                    : apiParams.category
+                    : apiParams.category,
+                is_enabled: Number(apiParams.is_enabled),
             }
         };
         
@@ -180,14 +181,14 @@ export default function ProductModal({
                 res = await createProduct({ params: productParams });
                 break;
             case 'delete':
-                res = await deleteProduct({ path: createdProductInfo?.id });
+                res = createdProductInfo?.id && await deleteProduct({ path: createdProductInfo?.id });
                 break;
             default:
-                res = await updateProduct({ params: productParams, path: createdProductInfo?.id });
+                res = createdProductInfo?.id && await updateProduct({ params: productParams, path: createdProductInfo?.id });
                 break;
         }
 
-        if (res.success) {
+        if (res?.success) {
             await updateProductList();
             enableNewCategory && await updateCategoryList();
             modalTriggerHandler();

@@ -19,7 +19,7 @@ import {
     FormItem,
     FormLabel,
 } from '@/components/ui/form';
-import couponInterface from "@/interface/coupons"
+import couponInterface from "@/interface/base/coupons"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { createCoupon, updateCoupon, deleteCoupon } from '@/api/admin/coupons';
@@ -103,14 +103,14 @@ export default function CouponModal({
                 res = await createCoupon({ params: productParams });
                 break;
             case 'delete':
-                res = await deleteCoupon({ path: createdCouponInfo?.id });
+                res = createdCouponInfo?.id && await deleteCoupon({ path: createdCouponInfo?.id });
                 break;
             default:
-                res = await updateCoupon({ params: productParams, path: createdCouponInfo?.id });
+                res = createdCouponInfo?.id && await updateCoupon({ params: productParams, path: createdCouponInfo?.id });
                 break;
         }
 
-        if (res.success) {
+        if (res?.success) {
             await updateCouponList();
             modalTriggerHandler();
         }

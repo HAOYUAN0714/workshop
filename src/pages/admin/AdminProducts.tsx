@@ -16,7 +16,7 @@ import ProductModal from "@/components/admin/modal/productModal";
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { getProductList, updateProduct, getAllProduct } from "@/api/admin/products"
-import productInterface from "@/interface/products"
+import productInterface from "@/interface/base/products"
 
 export default function AdminProducts() {
     const dispatch = useDispatch();

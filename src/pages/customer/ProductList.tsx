@@ -6,7 +6,7 @@ import { getAllProduct } from '@/api/customer/products';
 import { addCart, getCart } from '@/api/customer/cart';
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { updateCart } from '@/redux/customer/cartSlice';
-import { CustomerProductInterface } from "@/interface/products";
+import { CustomerProductInterface } from "@/interface/base/products";
 import ProductCard from '@/components/customer/ProductCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTag } from '@fortawesome/free-solid-svg-icons';

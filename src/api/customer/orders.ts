@@ -1,5 +1,9 @@
-import request from '../base/request';
-import { optionProps } from '../base/request';
+import request from '@/api/base/request';
+import {
+    postOrdersInterface,
+    getOrderListInterface,
+    getOrderDetailInterface
+} from '@/interface/customer/orders';
 
 /**
 * 結帳
@@ -12,16 +16,16 @@ import { optionProps } from '../base/request';
 },
 * @message | string
 */ 
-export const postOrders = (options: optionProps) => request('order', 'POST', options);
+export const postOrders = (options: postOrdersInterface) => request('order', 'POST', options);
 
 /**
 * 取得全部或指定頁面訂單
 * @param page | string
 */ 
-export const getOrderList = (options: optionProps) => request('orders', 'GET', options);
+export const getOrderList = (options: getOrderListInterface) => request('orders', 'GET', options);
 
 /**
 * 取得指定訂單資訊
 * @path order_id | string
 */ 
-export const getOrderDetail = (options: optionProps) => request('order', 'GET', options);
+export const getOrderDetail = (options: getOrderDetailInterface) => request('order', 'GET', options);

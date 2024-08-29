@@ -6,7 +6,7 @@ import { getProductDetail } from "@/api/customer/products";
 import { updateCartProduct, getCart, addCart } from '@/api/customer/cart';
 import { cartData, updateCart } from "@/redux/customer/cartSlice";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
-import { CustomerProductInterface, createProduct } from "@/interface/products";
+import { CustomerProductInterface, createProduct } from "@/interface/base/products";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Button } from "@/components/ui/button";

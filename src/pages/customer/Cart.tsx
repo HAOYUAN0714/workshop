@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteCartProduct, getCart, updateCartProduct } from '@/api/customer/cart';
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { cartData, updateCart } from '@/redux/customer/cartSlice';
-import { Cart as CartInterface } from '@/interface/carts';
+import { Cart as CartInterface } from '@/interface/base/carts';
 import CartCard from '@/components/customer/CartCard';
 import { Button } from "@/components/ui/button"
 

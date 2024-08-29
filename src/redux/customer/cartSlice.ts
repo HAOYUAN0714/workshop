@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import CartInfoInterface  from '@/interface/carts';
+import CartInfoInterface  from '@/interface/base/carts';
 
 export const cartSlice = createSlice({
     name: 'cart',

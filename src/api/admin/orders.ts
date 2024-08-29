@@ -1,11 +1,16 @@
-import request from '../base/request';
-import { optionProps } from '../base/request';
+import request from '@/api/base/request';
+import { optionProps } from '@/api/base/request';
+import {
+    getOrderListInterface,
+    updateOrderInterface,
+    deletOrderInterface
+} from '@/interface/admin/orders';
 
 /**
 * 取得全部或指定頁面訂單
 * @param page | string
 */ 
-export const getOrderList = (options: optionProps) => request('admin/orders', 'GET', options);
+export const getOrderList = (options: getOrderListInterface) => request('admin/orders', 'GET', options);
 
 /**
 * 更新指定訂單
@@ -29,13 +34,13 @@ export const getOrderList = (options: optionProps) => request('admin/orders', 'G
 }
 * @num number, // 訂單編號
 */ 
-export const updateOrder = (options: optionProps) => request('admin/order', 'PUT', options);
+export const updateOrder = (options: updateOrderInterface) => request('admin/order', 'PUT', options);
 
 /**
 * 刪除指定訂單
 * @path id | string
 */ 
-export const deleteOrder = (options: optionProps) => request('admin/order', 'DELETE', options);
+export const deleteOrder = (options: deletOrderInterface) => request('admin/order', 'DELETE', options);
 
 /**
 * 刪除所有訂單

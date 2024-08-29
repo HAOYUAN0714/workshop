@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Cart as CartInterface } from "@/interface/carts";
+import { Cart as CartInterface } from "@/interface/base/carts";
 import { Cross1Icon } from "@radix-ui/react-icons";
 
 interface CartCardProps {

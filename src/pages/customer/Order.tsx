@@ -4,7 +4,7 @@ import { getOrderDetail } from "@/api/customer/orders";
 import { Button } from "@/components/ui/button";
 import ProductDetailCard from "@/components/customer/ProductDetailCard";
 import orderBanner from "@/assets/customer/orderBanner.jpg";
-import OrderInterface, { createOrders } from "@/interface/orders"
+import OrderInterface, { createOrders } from "@/interface/base/orders"
 
 export default function Order() {
     const navigate = useNavigate();
