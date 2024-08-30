@@ -12,7 +12,7 @@ import {
 import NoDataHint from '@/components/common/noDataHint';
 import PageSet from "@/components/common/pageSet";
 import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
-import ProductModal from "@/components/admin/modal/productModal";
+import ProductModal from "@/components/admin/modal/ProductModal";
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { getProductList, updateProduct, getAllProduct } from "@/api/admin/products"
@@ -138,10 +138,10 @@ export default function AdminProducts() {
                             : <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[100px]">分類</TableHead>
+                                    <TableHead className="w-[150px]">分類</TableHead>
                                     <TableHead>名稱</TableHead>
-                                    <TableHead>原價</TableHead>
-                                    <TableHead>售價</TableHead>
+                                    <TableHead className="text-right">原價(NT$)</TableHead>
+                                    <TableHead className="text-right">售價(NT$)</TableHead>
                                     <TableHead className="w-[100px]">啟用狀態</TableHead>
                                     <TableHead className="w-[180px]">操作</TableHead>
                                 </TableRow>
@@ -151,8 +151,8 @@ export default function AdminProducts() {
                                     <TableRow key={ productItem.id }>
                                         <TableCell className="font-medium">{ productItem.category }</TableCell>
                                         <TableCell>{ productItem.title }</TableCell>
-                                        <TableCell>{ productItem.origin_price }</TableCell>
-                                        <TableCell>{ productItem.price }</TableCell>
+                                        <TableCell className="text-right">{ productItem.origin_price }</TableCell>
+                                        <TableCell className="text-right">{ productItem.price }</TableCell>
                                         <TableCell>
                                             <Switch
                                                 id="themeMode"

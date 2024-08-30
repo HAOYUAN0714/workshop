@@ -91,6 +91,7 @@ module.exports = {
         card: {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",
+          overlay: "var(--card-overlay)"
         },
       },
       borderRadius: {

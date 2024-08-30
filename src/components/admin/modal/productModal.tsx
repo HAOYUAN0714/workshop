@@ -5,12 +5,12 @@ import { useAlert } from "@/hook/useAlert";
 import { Button } from "@/components/ui/button"
 import ConfirmModal from "@/components/common/modal/confirmationModal";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogClose
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogClose
 } from "@/components/ui/dialog";
 import {
     Form,
@@ -20,11 +20,11 @@ import {
     FormLabel,
 } from '@/components/ui/form';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Product as productInterface } from "@/interface/base/products";
 import { Input } from "@/components/ui/input";

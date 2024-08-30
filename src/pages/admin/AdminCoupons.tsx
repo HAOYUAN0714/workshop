@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import CouponModal from '@/components/admin/modal/couponModal';
+import CouponModal from '@/components/admin/modal/CouponModal';
 import NoDataHint from '@/components/common/noDataHint';
 import PageSet from "@/components/common/pageSet";
 import { Switch } from "@/components/ui/switch"

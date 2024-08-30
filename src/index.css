@@ -24,7 +24,9 @@
     --disabled: #a8a8a8;
     --disabled-foreground: #FFFFFF;
 
+    
     --card: #ffffff;
+    --card-overlay: #eef1f6;
     --card-foreground: #020817;
 
     --confirm: #7DB0E1;
@@ -79,6 +81,7 @@
     --disabled-foreground: #FFFFFF;
  
     --card: #020817;
+    --card-overlay: #eef1f6;
     --card-foreground: #f8fafc;
 
     --confirm: #841148;

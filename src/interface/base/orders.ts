@@ -25,6 +25,8 @@ interface Orders {
     },
 }
 
+type OrderListData = OrderProductInterface & CustomerProductInterface;
+
 export const createOrders = (): Orders => { // 建立訂單預設值
     return {
         create_at: 0,
@@ -44,5 +46,6 @@ export const createOrders = (): Orders => { // 建立訂單預設值
 
 export type {
     Orders,
-    OrderProductInterface
+    OrderProductInterface,
+    OrderListData
 }
