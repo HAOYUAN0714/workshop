@@ -68,7 +68,7 @@ export default function Dashboard() {
                     />
                 ))}
             </div>
-            <FullLoading isLoading={isLoading} />
+            {/* <FullLoading isLoading={isLoading} /> */}
             <header className="z-40 flex-none w-dvw h-16">
                 <div className="fixed w-full flex flex-none h-16 p-4 bg-header text-header-foreground">
                     <h2 className="flex-none header-title text-lg">

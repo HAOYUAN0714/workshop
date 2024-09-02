@@ -3,11 +3,11 @@ import { useAlert } from "@/hook/useAlert";
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteCartProduct, getCart, updateCartProduct } from '@/api/customer/cart';
-import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
 import { cartData, updateCart } from '@/redux/customer/cartSlice';
 import { Cart as CartInterface } from '@/interface/base/carts';
 import CartCard from '@/components/customer/CartCard';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { CartSkeleton } from '@/components/common/skeleton';
 
 interface loadingQueueInterface {
     [key: string]: boolean;
@@ -22,22 +22,18 @@ export default function ProductList() {
     const [submiDisabled, setSubmitDisabled] = useState(false); // 送出按鈕是否禁用
     const [submitTxt, setSubmitTxt] = useState('確認送出'); // 送出按鈕文字
     const [updatingProduct, setUpdatingProduct] = useState<loadingQueueInterface>({});
+    const [isInited, setIsInited] = useState(false);
 
     // 更新購物車
-    const getCartList = async(isInit = false) => {
-        const loadingKey = new Date().getTime().toString();
-        isInit && dispatch(addLoading(loadingKey));
-        
+    const getCartList = async() => {
         const cartRes = await getCart({});
 
         if (!cartRes?.success) {
             showAlert('error', cartRes?.message || '取得/更新購物車資料失敗');
-            dispatch(removeLoading(loadingKey));
             return;
         } 
 
         dispatch(updateCart(cartRes.data));
-        isInit && dispatch(removeLoading(loadingKey));
     };
 
     // 更新購物車中的商品數量
@@ -73,7 +69,10 @@ export default function ProductList() {
     };
 
     useEffect(() => {
-        getCartList(true);
+        (async() => {
+            await getCartList();
+            setIsInited(true);
+        })()
     }, [])
 
     useEffect(() => {
@@ -100,16 +99,22 @@ export default function ProductList() {
             <div className="flex-col w-96">
                 <h3 className='flex flex-none justify-start items-center h-16 text-3xl'>訂單內容</h3>
                 <div className="flex flex-col">
-                    { cartList.map((cartInfo) => {
-                        return <CartCard
-                            className='mb-4'
-                            cartInfo={cartInfo}
-                            handleSelect={(cart, qty) => updateProductNum(cart, qty)}
-                            handleDelete={(id) => deleteProduct(id)}
-                            isLoading={updatingProduct[cartInfo.id]}
-                            key={cartInfo.id} 
-                        />
-                    })}
+                    { isInited
+                        ?   cartList.map((cartInfo) => {
+                            return <CartCard
+                                className='mb-4'
+                                cartInfo={cartInfo}
+                                handleSelect={(cart, qty) => updateProductNum(cart, qty)}
+                                handleDelete={(id) => deleteProduct(id)}
+                                isLoading={updatingProduct[cartInfo.id]}
+                                key={cartInfo.id} 
+                            />
+                        })
+                        :   Array.from({ length: 1 }).map((_, index) => {
+                            return <CartSkeleton className='w-full h-[150px] mb-4' key={index} />
+                        })
+                    }
+
                 </div>
                 <div className="flex flex-none w-full justify-between items-center h-16 text-2xl font-bold">
                     <div className="flex-none">總金額</div>

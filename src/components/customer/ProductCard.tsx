@@ -33,8 +33,8 @@ export default function ProductCard({
                 {
                     productInfo.imageUrl && <div className="flex-1">
                         <img
+                            className="w-full h-full object-cover"
                             src={productInfo.imageUrl}
-                            className='w-full h-full object-cover'
                         />
                     </div>
                 }
