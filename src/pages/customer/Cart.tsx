@@ -76,16 +76,25 @@ export default function ProductList() {
     }, [])
 
     useEffect(() => {
-        if (cartList.length === 0 || Object.keys(updatingProduct).length > 0) {
-            setSubmitDisabled(true);
-            Object.keys(updatingProduct).length > 0 && setSubmitTxt('更新購物車中...');
-            cartList.length === 0 && setSubmitTxt('購物車是空的');
-            return;
+        switch (true) {
+            case cartList.length === 0:
+                setSubmitTxt('購物車是空的');
+                break;
+            case Object.keys(updatingProduct).length > 0:
+                setSubmitTxt('更新購物車中...');
+                break;
+            case !isInited:
+                setSubmitTxt('取得購物車中...');
+                break;
+            default: 
+                setSubmitDisabled(false);
+                setSubmitTxt('下一步');
+                return;
         }
+        
+        setSubmitDisabled(true);
 
-        setSubmitDisabled(false);
-        setSubmitTxt('下一步');
-    }, [cartList, updatingProduct])
+    }, [cartList, updatingProduct, isInited])
 
     // api 更新購物車時就更新當前頁面的購物車
     useEffect(() => {

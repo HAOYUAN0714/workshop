@@ -50,9 +50,27 @@ const CartSkeleton = ({ className = '' }: { className?: string }) => {
     </div>)
 };
 
+const ProductSkeleton = ({ className = '' }: { className?: string }) => {
+    return <div className={`flex ${className}`}>
+        <div className="flex flex-1">
+            <Skeleton className="flex-none w-full min-h-[400px]" />
+        </div>
+        <div className="flex flex-1 flex-col pl-12">
+            <Skeleton className="flex-none w-[50%] h-6 mb-2" />
+            <Skeleton className="flex-none w-[50%] h-4 mb-6" />
+            <Skeleton className="flex-none w-full h-24 mb-2" />
+            <div className="flex items-center h-20 mb-2">
+                <Skeleton className="flex-none w-full h-12" />
+            </div>
+            <Skeleton className="flex-none w-full h-16 " />
+        </div>
+    </div>
+};
+
 export {
     LineSkeleton,
     profileSkeleton,
     CardSkeleton,
-    CartSkeleton
+    CartSkeleton,
+    ProductSkeleton
 }

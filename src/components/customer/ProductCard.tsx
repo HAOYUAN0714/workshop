@@ -6,16 +6,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Product as productInterface } from "@/interface/base/products";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 interface ProductCardProps {
     productInfo: productInterface,
     className?: string,
+    isLoading: Boolean,
     updateCartList: () => void,
 }
 
 export default function ProductCard({
     productInfo,
     className,
+    isLoading,
     updateCartList,
 }: ProductCardProps) {
 
@@ -40,16 +44,24 @@ export default function ProductCard({
                 }
             </NavLink>
             <div 
-                className="
+                className={`
                     absolute bottom-2 right-4 
                     flex justify-center items-center 
                     rounded-full w-10 h-10 shadow-md
-                    bg-background text-foreground text-2xl
-                    hover:bg-primary hover:text-primary-foreground cursor-pointer
-                "
-                onClick={updateCartList}
+                    bg-background text-success text-2xl
+                    
+                    ${ isLoading 
+                        ?   'cursor-not-allowed'
+                        :   'hover:bg-success hover:text-success-foreground cursor-pointer'
+                    }
+                `}
+                onClick={() => !isLoading && updateCartList()}
             >
-                +
+                { isLoading
+                    ?   <div className="animate-spin h-5 w-5 border-2 border-success border-b-transparent rounded-full" />
+                    :   <FontAwesomeIcon className="text-base" icon={faCartShopping}/>    
+                }
+                
             </div>
         </CardContent>
     </Card>

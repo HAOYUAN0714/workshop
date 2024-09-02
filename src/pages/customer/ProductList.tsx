@@ -15,15 +15,21 @@ type CategoryProductData = {
     [category: string]: CustomerProductInterface[];
 };
 
+interface loadingQueueInterface {
+    [key: string]: boolean;
+}
+
 export default function ProductList() {
     const dispatch = useDispatch();
     const showAlert = useAlert();
     const [categoryProductData, setCategoryProductData] = useState<CategoryProductData>({});
     const [categoryList, setCategoryList] = useState<string[]>([]); // 分類列表
     const [isInited, setIsInited] = useState(false);
+    const [loadingQueue, setLoadingQueue] = useState<loadingQueueInterface>({});
 
     // 更新購物車
     const updateCartList = async(product_id: string, qty: number) => {
+        setLoadingQueue({ ...loadingQueue, [product_id]: true });
         const newCartRes = await addCart({ params: { data: { product_id, qty } }})
 
         // 新增失敗的話直接 return
@@ -43,6 +49,11 @@ export default function ProductList() {
         dispatch(updateCart(cartRes.data));
 
         // 最終顯示新增成功信息
+        setLoadingQueue((prevQueue) => {
+            const updatedProduct = { ...prevQueue };
+            delete updatedProduct[product_id];
+            return updatedProduct;
+        });
         showAlert('success', newCartRes.message);
     };
 
@@ -124,6 +135,7 @@ export default function ProductList() {
                                                 className="mb-3 mr-6"
                                                 productInfo={product}
                                                 updateCartList={() => updateCartList(product.id, 1)}
+                                                isLoading={loadingQueue[product.id]}
                                                 key={product.id}
                                             />
                                         })
