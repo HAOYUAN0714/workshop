@@ -37,7 +37,7 @@ export default function ProductCard({
                 {
                     productInfo.imageUrl && <div className="flex-1">
                         <img
-                            className="w-full h-full object-cover"
+                            className="w-full h-full rounded-l-none rounded-md object-cover"
                             src={productInfo.imageUrl}
                         />
                     </div>

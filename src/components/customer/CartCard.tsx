@@ -61,7 +61,7 @@ export default function CartCard({
                 cartInfo.product.imageUrl && <div className="flex-none w-[170px] h-full">
                     <img
                         src={cartInfo.product.imageUrl}
-                        className='w-full h-full object-cover'
+                        className='w-full h-full rounded-r-none rounded-md object-cover'
                     />
                 </div>
             }
