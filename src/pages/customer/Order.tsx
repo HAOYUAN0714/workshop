@@ -10,6 +10,7 @@ export default function Order() {
     const navigate = useNavigate();
     const [orderInfo, setOrderInfo] = useState<OrderInterface>(createOrders());
     const { id: orderId = '' } = useParams();
+    const [isInited, setIsInited] = useState(false);
 
     useEffect(() => {
         if (!orderId) {
@@ -26,6 +27,7 @@ export default function Order() {
             }
         
             setOrderInfo(res.order);
+            setTimeout(() => { setIsInited(true) }, 1000)
         })();
 
     }, []);
@@ -55,6 +57,7 @@ export default function Order() {
             <div className="flex flex-1">
                 <ProductDetailCard
                     orderInfo={orderInfo}
+                    isLoading={!isInited}
                 />
             </div>
         </div>

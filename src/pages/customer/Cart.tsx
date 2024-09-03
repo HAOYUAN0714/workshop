@@ -91,7 +91,7 @@ export default function ProductList() {
                 setSubmitTxt('下一步');
                 return;
         }
-        
+
         setSubmitDisabled(true);
 
     }, [cartList, updatingProduct, isInited])
@@ -104,8 +104,8 @@ export default function ProductList() {
     }, [cartState])
 
     return (
-        <div id="cart-root" className='flex flex-1 justify-center'>
-            <div className="flex-col w-96">
+        <div id="cart-root" className='flex flex-1 justify-center bg-overlay'>
+            <div className="flex-col w-[576px] px-12 py-4 bg-card">
                 <h3 className='flex flex-none justify-start items-center h-16 text-3xl'>訂單內容</h3>
                 <div className="flex flex-col">
                     { isInited
@@ -130,7 +130,7 @@ export default function ProductList() {
                     <div className="flex-none">NT${totalPay}</div>
                 </div>
                 <Button
-                    className="flex flex-none w-full justify-center items-center h-16"
+                    className="flex flex-none w-full justify-center items-center h-16 rounded-none"
                     variant={
                         submiDisabled
                             ? 'disabled'

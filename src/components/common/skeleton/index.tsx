@@ -8,14 +8,33 @@ const LineSkeleton = ({ className = '' }: { className?: string }) => {
   )
 }
 
-const profileSkeleton = ({ className = '' }: { className?: string }) => {
+const BetweenSkeleton = ({
+    className = '',
+    leftClass = '',
+    rightClass = '' 
+}: { className?: string, leftClass?: string, rightClass?: string }) => {
+    return <div className={`flex w-full justify-between ${className}`}>
+        <div className={`${leftClass}`}>
+            <LineSkeleton />
+        </div>
+        <div className={`${rightClass}`}>
+            <LineSkeleton />
+        </div>
+    </div>
+};
+
+const OrderDetailSkeleton = ({ className = '' }: { className?: string }) => {
   return (
-    <div className={`flex items-center space-x-4 ${className}`}>
-      <Skeleton className="h-12 w-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
-      </div>
+    <div className={`flex flex-col w-full ${className}`}>
+        <div className="flex">
+            <div className="w-16 h-16">
+                <LineSkeleton />
+            </div>
+            <div className="flex flex-col flex-1  pl-2">
+                <BetweenSkeleton className="py-2" leftClass="w-20 h-6" rightClass="w-5 h-5" />
+                <BetweenSkeleton className="py-2" leftClass="w-20 h-3" rightClass="w-12 h-3" />
+            </div>
+        </div>
     </div>
   )
 }
@@ -69,7 +88,8 @@ const ProductSkeleton = ({ className = '' }: { className?: string }) => {
 
 export {
     LineSkeleton,
-    profileSkeleton,
+    BetweenSkeleton,
+    OrderDetailSkeleton,
     CardSkeleton,
     CartSkeleton,
     ProductSkeleton

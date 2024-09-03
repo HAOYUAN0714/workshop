@@ -96,14 +96,14 @@ export default function Product() {
 
     }, []);
 
-    return <div className="flex flex-col w-full px-24">
+    return <div className="flex flex-col w-full px-12">
         <div className="flex items-center h-12">
             <NavLink className="flex items-center text-base" to="/" >
                 <FontAwesomeIcon className="text-base mr-2" icon={faArrowLeft}/> 回產品列表
             </NavLink>
         </div>
         { isInited
-            ?   <div className="flex">
+            ?   <div className="flex p-12 bg-background rounded-md">
                     <div className="flex flex-1">
                         <div
                             className="flex flex-none w-full min-h-[400px] bg-center bg-cover"
@@ -155,7 +155,7 @@ export default function Product() {
                         </div>
 
                         <Button
-                            className="relative h-16 text-lg"
+                            className="relative h-16 text-lg rounded-none"
                             onClick={() => addCartHandler()}
                         >
                             {
@@ -175,7 +175,7 @@ export default function Product() {
                     </div>
 
             </div>
-            :   <ProductSkeleton />
+            :   <ProductSkeleton className="flex p-12 bg-background rounded-md"/>
         }
     </div>
 };

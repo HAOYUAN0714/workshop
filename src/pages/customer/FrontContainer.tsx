@@ -55,7 +55,7 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div id="front-container" className="w-full flex flex-col  bg-background">
+        <div id="front-container" className="w-full min-h-lvh flex flex-col  bg-overlay">
             <div id="top-alert-list" className='z-50 fixed top-16 right-1 w-[275px]'>
                 {alertList.map((alertInfo) => (
                     <AlertDestructive

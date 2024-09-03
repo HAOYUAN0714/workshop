@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, createHashRouter, useLocation, useNavigate } from 'react-router-dom';
 import { checkIsLogin } from '@/api/admin/user' 
 import Login from '@/pages/Login';
-import Dashboard  from './pages/admin/Dashboard';
-import AdminProducts from './pages/admin/AdminProducts';
-import AdminCoupons from './pages/admin/AdminCoupons';
-import AdminOrders from './pages/admin/AdminOrders';
-import FrontContainer from './pages/customer/FrontContainer';
-import ProductList from './pages/customer/ProductList';
-import Product from './pages/customer/Product';
-import Cart from './pages/customer/Cart';
-import Checkout from './pages/customer/Checkout';
-import Order from './pages/customer/Order';
-import FullLoading from './components/common/fullLoading';
+import Dashboard  from '@/pages/admin/Dashboard';
+import AdminProducts from '@/pages/admin/AdminProducts';
+import AdminCoupons from '@/pages/admin/AdminCoupons';
+import AdminOrders from '@/pages/admin/AdminOrders';
+import FrontContainer from '@/pages/customer/FrontContainer';
+import ProductList from '@/pages/customer/ProductList';
+import Product from '@/pages/customer/Product';
+import Cart from '@/pages/customer/Cart';
+import Checkout from '@/pages/customer/Checkout';
+import Order from '@/pages/customer/Order';
+import Payment from '@/pages/customer/Payment';
+import FullLoading from '@/components/common/fullLoading';
 
 // 路由守衛
 interface RouterGuardProps {
@@ -167,6 +168,11 @@ const router = createHashRouter([
                 // 訂單確認
                 path: '/checkout',
                 element: <Checkout />,
+            },
+            {
+                // 付款確認
+                path: '/payment/:id',
+                element: <Payment />,
             },
             {
                 // 下訂結果

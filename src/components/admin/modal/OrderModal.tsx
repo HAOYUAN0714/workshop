@@ -99,7 +99,7 @@ export default function OrderModal({
             : <Dialog open={Boolean(modalType)} onOpenChange={modalTriggerHandler}>
             {/* onInteractOutside 避免點擊overlay 導致彈窗關閉 */}
             <DialogContent
-                className="max-w-[720px] max-h-full overflow-y-auto bg-card-overlay"
+                className="max-w-[720px] max-h-full overflow-y-auto bg-overlay"
                 onInteractOutside={(e) => e.preventDefault()}
             >
                 <DialogHeader>
@@ -111,7 +111,7 @@ export default function OrderModal({
                     <div className="flex flex-1 flex-col p-4 mb-4 bg-card rounded-md shadow-md">
                         <h3 className="mb-4 p-4 border-b-2 font-bold">商品資料</h3>
                         <Table className="border-2 border-t-0">
-                            <TableHeader className="bg-card-overlay">
+                            <TableHeader className="bg-overlay">
                                 <TableRow>
                                     <TableHead className="w-[100px]">商品號</TableHead>
                                     <TableHead className="w-[100px]">商品名稱</TableHead>

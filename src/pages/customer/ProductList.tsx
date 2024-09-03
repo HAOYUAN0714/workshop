@@ -153,7 +153,7 @@ export default function ProductList() {
                             </div>
                             <div className="flex flex-wrap">
                                 { Array.from({ length: 4 }).map((_, cardIndex) => {
-                                    return <CardSkeleton className="mb-3 mr-6" key={cardIndex} />
+                                    return <CardSkeleton className="mb-3 mr-6 bg-card" key={cardIndex} />
                                 })}
                             </div>
                         </div>
