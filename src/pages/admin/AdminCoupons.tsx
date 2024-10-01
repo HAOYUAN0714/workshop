@@ -1,29 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useAlert } from "@/hook/useAlert";
-import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
-import { format } from "date-fns"
-import { getCouponList, updateCoupon } from '@/api/admin/coupons';
+import { useAlert } from '@/hook/useAlert'
+import { addLoading, removeLoading } from '@/redux/common/loadingSlice'
+import { format } from 'date-fns'
+import { getCouponList, updateCoupon } from '@/api/admin/coupons'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import CouponModal from '@/components/admin/modal/CouponModal';
-import NoDataHint from '@/components/common/noDataHint';
-import PageSet from "@/components/common/pageSet";
-import { Switch } from "@/components/ui/switch"
-import { Button } from "@/components/ui/button"
-import { Coupon as couponInterface } from "@/interface/base/coupons"
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from '@/components/ui/table'
+import CouponModal from '@/components/admin/modal/CouponModal'
+import NoDataHint from '@/components/common/noDataHint'
+import PageSet from '@/components/common/pageSet'
+import { Switch } from '@/components/ui/switch'
+import { Button } from '@/components/ui/button'
+import { Coupon as couponInterface } from '@/interface/base/coupons'
 
-export default function AdminOrders() {
-    const dispatch = useDispatch();
-    const showAlert = useAlert();
-    const [isUpdated, setIsUpdated] = useState(false);
-    const [couponList, setCouponList] = useState([]);
+export default function AdminOrders () {
+    const dispatch = useDispatch()
+    const showAlert = useAlert()
+    const [isUpdated, setIsUpdated] = useState(false)
+    const [couponList, setCouponList] = useState([])
 
     const [pagination, setPagination] = useState({
         category: null,
@@ -31,59 +31,59 @@ export default function AdminOrders() {
         has_next: false,
         has_pre: false,
         total_pages: 1,
-        pageArray: [1],
-    });
+        pageArray: [1]
+    })
 
-    const [couponFilter, setCouponFilter] = useState({ page: '1' });
-    const [editCouponInfo, setEditCouponInfo] = useState({});
-    const [modalType, setModalType] = useState('');
+    const [couponFilter, setCouponFilter] = useState({ page: '1' })
+    const [editCouponInfo, setEditCouponInfo] = useState({})
+    const [modalType, setModalType] = useState('')
 
     const updateCouponList = async () => {
-            const loadingKey = new Date().getTime().toString();
-            dispatch(addLoading(loadingKey));
+        const loadingKey = new Date().getTime().toString()
+        dispatch(addLoading(loadingKey))
 
-            const couponRes = await getCouponList({ params: couponFilter });
+        const couponRes = await getCouponList({ params: couponFilter })
 
-            if (couponRes.success) {
-                setCouponList(couponRes.coupons);
-                const pageArray = Array.from({ length: pagination.total_pages }, (_, i) => i + 1);
-                setPagination({ ...couponRes.pagination, pageArray });
-            }
+        if (couponRes.success) {
+            setCouponList(couponRes.coupons)
+            const pageArray = Array.from({ length: pagination.total_pages }, (_, i) => i + 1)
+            setPagination({ ...couponRes.pagination, pageArray })
+        }
 
-            setIsUpdated(true);
-            dispatch(removeLoading(loadingKey));
-    };
+        setIsUpdated(true)
+        dispatch(removeLoading(loadingKey))
+    }
 
     // 啟用/關閉 個別優惠券
     const switchCouponEnable = async (couponInfo: couponInterface) => {
-        const loadingKey = new Date().getTime().toString();
-        dispatch(addLoading(loadingKey));
+        const loadingKey = new Date().getTime().toString()
+        dispatch(addLoading(loadingKey))
 
-        const { id: path = '', ...newCoupon } = couponInfo;
+        const { id: path = '', ...newCoupon } = couponInfo
 
         // 商邊開關
-        newCoupon.is_enabled =  Number(!newCoupon.is_enabled); 
-        
-        const updateRes = await updateCoupon({ params: { data: newCoupon }, path });
-        updateRes?.success && await updateCouponList();
+        newCoupon.is_enabled = Number(!newCoupon.is_enabled)
 
-        dispatch(removeLoading(loadingKey));
-        showAlert(updateRes.success ? 'success' : 'error', updateRes.message);
-    };
+        const updateRes = await updateCoupon({ params: { data: newCoupon }, path })
+        updateRes?.success && await updateCouponList()
+
+        dispatch(removeLoading(loadingKey))
+        showAlert(updateRes.success ? 'success' : 'error', updateRes.message)
+    }
 
     // 切換分頁
     const handlePageChange = (page: number) => {
-        setCouponFilter({ ...couponFilter, page: page.toString() });
-    };
+        setCouponFilter({ ...couponFilter, page: page.toString() })
+    }
 
     useEffect(() => {
-        updateCouponList();
-    }, [couponFilter]);
+        updateCouponList()
+    }, [couponFilter])
 
     // 切換 modal 流程
-    const modalTriggerHandler = (type: string, couponInfo?: couponInterface ) => {
-        setEditCouponInfo(type === 'edit' || type === 'delete' ? { ...couponInfo } : {});
-        setModalType(type);
+    const modalTriggerHandler = (type: string, couponInfo?: couponInterface) => {
+        setEditCouponInfo(type === 'edit' || type === 'delete' ? { ...couponInfo } : {})
+        setModalType(type)
     }
 
     return (
@@ -113,42 +113,42 @@ export default function AdminOrders() {
                         couponList.length === 0 && isUpdated
                             ? <NoDataHint />
                             : <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[100px]">標題</TableHead>
-                                    <TableHead>折扣</TableHead>
-                                    <TableHead>到期日</TableHead>
-                                    <TableHead>優惠碼</TableHead>
-                                    <TableHead className="w-[100px]">啟用狀態</TableHead>
-                                    <TableHead className="w-[180px]">編輯</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {couponList.map((couponItem: couponInterface) => (
-                                    <TableRow key={ couponItem.id }>
-                                        <TableCell className="font-medium">{ couponItem.title }</TableCell>
-                                        <TableCell>{ couponItem.percent }%</TableCell>
-                                        <TableCell>{ format(couponItem.due_date, 'yyyy-MM-dd') }</TableCell>
-                                        <TableCell>{ couponItem.code }</TableCell>
-                                        <TableCell>
-                                            <Switch
-                                                id="themeMode"
-                                                checked={!!couponItem.is_enabled}
-                                                onCheckedChange={() => switchCouponEnable(couponItem)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button className="mr-2" type="button" onClick={() => modalTriggerHandler('edit', couponItem)}>
-                                                編輯
-                                            </Button>
-                                            <Button type="button" variant="destructive" onClick={() => modalTriggerHandler('delete', couponItem)}>
-                                                刪除
-                                            </Button>
-                                        </TableCell>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[100px]">標題</TableHead>
+                                        <TableHead>折扣</TableHead>
+                                        <TableHead>到期日</TableHead>
+                                        <TableHead>優惠碼</TableHead>
+                                        <TableHead className="w-[100px]">啟用狀態</TableHead>
+                                        <TableHead className="w-[180px]">編輯</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {couponList.map((couponItem: couponInterface) => (
+                                        <TableRow key={ couponItem.id }>
+                                            <TableCell className="font-medium">{ couponItem.title }</TableCell>
+                                            <TableCell>{ couponItem.percent }%</TableCell>
+                                            <TableCell>{ format(couponItem.due_date, 'yyyy-MM-dd') }</TableCell>
+                                            <TableCell>{ couponItem.code }</TableCell>
+                                            <TableCell>
+                                                <Switch
+                                                    id="themeMode"
+                                                    checked={!!couponItem.is_enabled}
+                                                    onCheckedChange={() => switchCouponEnable(couponItem)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button className="mr-2" type="button" onClick={() => modalTriggerHandler('edit', couponItem)}>
+                                                編輯
+                                                </Button>
+                                                <Button type="button" variant="destructive" onClick={() => modalTriggerHandler('delete', couponItem)}>
+                                                刪除
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                     }
                 </div>
                 {/* 分頁 */}
@@ -161,5 +161,5 @@ export default function AdminOrders() {
                 </div>
             </div>
         </div>
-    );
+    )
 }

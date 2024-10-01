@@ -1,23 +1,23 @@
-import request from '@/api/base/request';
+import request from '@/api/base/request'
 import {
     getArticleListInterface,
     getArticleInterface,
     createArticleInterface,
     updateArticleInterface,
     deleteArticleInterface
-} from '@/interface/admin/articles';
+} from '@/interface/admin/articles'
 
 /**
 * 取得指定頁面或所有文章
 * @param page | string
-*/ 
-export const getArticleList = (options: getArticleListInterface) => request('admin/articles', 'GET', options);
+*/
+export const getArticleList = (options: getArticleListInterface) => request('admin/articles', 'GET', options)
 
 /**
 * 取得指定文章
 * @path id | string
-*/ 
-export const getArticle = (options: getArticleInterface) => request('admin/article', 'GET', options);
+*/
+export const getArticle = (options: getArticleInterface) => request('admin/article', 'GET', options)
 
 /**
 * 建立文章
@@ -30,8 +30,8 @@ export const getArticle = (options: getArticleInterface) => request('admin/artic
 * @author string
 * @isPublic Boolean
 * @content string
-*/ 
-export const createArticle = (options: createArticleInterface) => request('admin/article', 'POST', options);
+*/
+export const createArticle = (options: createArticleInterface) => request('admin/article', 'POST', options)
 
 /**
 * 編輯指定文章
@@ -45,11 +45,11 @@ export const createArticle = (options: createArticleInterface) => request('admin
 * @author string
 * @isPublic Boolean
 * @content string
-*/ 
-export const updateArticle = (options: updateArticleInterface) => request('admin/article', 'PUT', options);
+*/
+export const updateArticle = (options: updateArticleInterface) => request('admin/article', 'PUT', options)
 
 /**
 * 刪除指定文章
 * @path id | string
-*/ 
-export const deleteArticle = (options: deleteArticleInterface) => request('admin/article', 'DELETE', options);
+*/
+export const deleteArticle = (options: deleteArticleInterface) => request('admin/article', 'DELETE', options)

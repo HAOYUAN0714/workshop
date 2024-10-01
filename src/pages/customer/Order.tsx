@@ -1,42 +1,41 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate, NavLink } from "react-router-dom";
-import { getOrderDetail } from "@/api/customer/orders";
-import { Button } from "@/components/ui/button";
-import ProductDetailCard from "@/components/customer/ProductDetailCard";
-import orderBanner from "@/assets/customer/orderBanner.jpg";
-import { Orders as OrderInterface, createOrders } from "@/interface/base/orders"
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate, NavLink } from 'react-router-dom'
+import { getOrderDetail } from '@/api/customer/orders'
+import { Button } from '@/components/ui/button'
+import ProductDetailCard from '@/components/customer/ProductDetailCard'
+import orderBanner from '@/assets/customer/orderBanner.jpg'
+import { Orders as OrderInterface, createOrders } from '@/interface/base/orders'
 
-export default function Order() {
-    const navigate = useNavigate();
-    const [orderInfo, setOrderInfo] = useState<OrderInterface>(createOrders());
-    const { id: orderId = '' } = useParams();
-    const [isInited, setIsInited] = useState(false);
+export default function Order () {
+    const navigate = useNavigate()
+    const [orderInfo, setOrderInfo] = useState<OrderInterface>(createOrders())
+    const { id: orderId = '' } = useParams()
+    const [isInited, setIsInited] = useState(false)
 
     useEffect(() => {
         if (!orderId) {
-            navigate('/');
-            return;
+            navigate('/')
+            return
         }
 
-        (async() => {
-            const res = await getOrderDetail({ path: orderId });
+        (async () => {
+            const res = await getOrderDetail({ path: orderId })
 
             if (!res?.success) {
-                navigate('/');
-                return;
+                navigate('/')
+                return
             }
-        
-            setOrderInfo(res.order);
-            setTimeout(() => { setIsInited(true) }, 1000)
-        })();
 
-    }, []);
+            setOrderInfo(res.order)
+            setTimeout(() => { setIsInited(true) }, 1000)
+        })()
+    }, [])
 
     return <div className="flex flex-col w-full px-12">
         <div
             className="flex flex-none w-full min-h-[400px] bg-center bg-cover mb-6"
             style={{
-                backgroundImage: `url(${orderBanner})`,
+                backgroundImage: `url(${orderBanner})`
             }}
         />
         <div className="flex">

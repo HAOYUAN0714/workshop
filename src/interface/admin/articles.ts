@@ -1,4 +1,4 @@
-import { optionProps } from '@/api/base/request';
+import { optionProps } from '@/api/base/request'
 
 interface getArticleListInterface extends optionProps {
     params: {
@@ -19,7 +19,7 @@ interface createArticleInterface extends optionProps {
             tag: string[],
             create_at: EpochTimeStamp | DOMHighResTimeStamp,
             author: string,
-            isPublic: Boolean,
+            isPublic: boolean,
             content: string
         }
     },

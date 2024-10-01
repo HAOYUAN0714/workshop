@@ -1,4 +1,4 @@
-import { optionProps } from '@/api/base/request';
+import { optionProps } from '@/api/base/request'
 
 interface getProductListInterface extends optionProps {
     params: {
@@ -12,13 +12,13 @@ interface createProductInterface extends optionProps {
         data: {
             title: string,
             category: string,
-            origin_price: number, 
-            price: number, 
+            origin_price: number,
+            price: number,
             description: string,
             content: string,
-            is_enabled: number, 
-            unit: string, 
-            imageUrl: string, 
+            is_enabled: number,
+            unit: string,
+            imageUrl: string,
             imagesUrl?: string[]
         }
     }

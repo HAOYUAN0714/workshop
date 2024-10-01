@@ -1,4 +1,4 @@
-import { optionProps } from '@/api/base/request';
+import { optionProps } from '@/api/base/request'
 
 interface useCouponInterface extends optionProps {
     params: {

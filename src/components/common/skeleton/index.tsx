@@ -1,17 +1,17 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from '@/components/ui/skeleton'
 
 const LineSkeleton = ({ className = '' }: { className?: string }) => {
-  return (
-    <div className={`flex flex-none items-center w-full h-full space-x-4 ${className}`}>
-      <Skeleton className="h-full w-full" />
-    </div>
-  )
+    return (
+        <div className={`flex flex-none items-center w-full h-full space-x-4 ${className}`}>
+            <Skeleton className="h-full w-full" />
+        </div>
+    )
 }
 
 const BetweenSkeleton = ({
     className = '',
     leftClass = '',
-    rightClass = '' 
+    rightClass = ''
 }: { className?: string, leftClass?: string, rightClass?: string }) => {
     return <div className={`flex w-full justify-between ${className}`}>
         <div className={`${leftClass}`}>
@@ -21,22 +21,22 @@ const BetweenSkeleton = ({
             <LineSkeleton />
         </div>
     </div>
-};
+}
 
 const OrderDetailSkeleton = ({ className = '' }: { className?: string }) => {
-  return (
-    <div className={`flex flex-col w-full ${className}`}>
-        <div className="flex">
-            <div className="w-16 h-16">
-                <LineSkeleton />
-            </div>
-            <div className="flex flex-col flex-1  pl-2">
-                <BetweenSkeleton className="py-2" leftClass="w-20 h-6" rightClass="w-5 h-5" />
-                <BetweenSkeleton className="py-2" leftClass="w-20 h-3" rightClass="w-12 h-3" />
+    return (
+        <div className={`flex flex-col w-full ${className}`}>
+            <div className="flex">
+                <div className="w-16 h-16">
+                    <LineSkeleton />
+                </div>
+                <div className="flex flex-col flex-1  pl-2">
+                    <BetweenSkeleton className="py-2" leftClass="w-20 h-6" rightClass="w-5 h-5" />
+                    <BetweenSkeleton className="py-2" leftClass="w-20 h-3" rightClass="w-12 h-3" />
+                </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }
 
 const CardSkeleton = ({ className = '' }: { className?: string }) => {
@@ -52,7 +52,7 @@ const CardSkeleton = ({ className = '' }: { className?: string }) => {
             </div>
         </div>
     </div>)
-};
+}
 
 const CartSkeleton = ({ className = '' }: { className?: string }) => {
     return (<div className={`w-[300px] h-[150px] rounded-md shadow-md ${className}`}>
@@ -67,7 +67,7 @@ const CartSkeleton = ({ className = '' }: { className?: string }) => {
             </div>
         </div>
     </div>)
-};
+}
 
 const ProductSkeleton = ({ className = '' }: { className?: string }) => {
     return <div className={`flex ${className}`}>
@@ -84,7 +84,7 @@ const ProductSkeleton = ({ className = '' }: { className?: string }) => {
             <Skeleton className="flex-none w-full h-16 " />
         </div>
     </div>
-};
+}
 
 export {
     LineSkeleton,

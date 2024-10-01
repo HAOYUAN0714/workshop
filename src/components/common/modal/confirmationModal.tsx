@@ -1,14 +1,13 @@
-import {  useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-  DialogFooter,
-} from "@/components/ui/dialog"
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogClose,
+    DialogFooter
+} from '@/components/ui/dialog'
 
 type confirmOption = {
     needConfirm?: boolean;
@@ -31,22 +30,22 @@ interface modalProps {
     cancelOption?: cancelOption;
 }
 
-export default function ProductModal({
+export default function ProductModal ({
     modalTite = 'Edit Profile',
     modalDescription = '',
     modalType = '',
     modalTriggerHandler,
     confirmOption = { needConfirm: true, confirmTitle: '儲存', confirmHandler: () => {} },
-    cancelOption = { needCancel: true, cancelTitle: '取消', cancelHandler: () => {} },
+    cancelOption = { needCancel: true, cancelTitle: '取消', cancelHandler: () => {} }
 }: modalProps) {
-    const { needConfirm, confirmTitle, confirmHandler } = confirmOption;
-    const { needCancel, cancelTitle, cancelHandler } = cancelOption;
+    const { needConfirm, confirmTitle, confirmHandler } = confirmOption
+    const { needCancel, cancelTitle, cancelHandler } = cancelOption
 
     const ConfirmBtn = () => {
         return needConfirm
             ? <Button className="mr-2" type="submit" onClick={confirmHandler}>{ confirmTitle }</Button>
-            : '';
-    };
+            : ''
+    }
 
     const CancelBtn = () => {
         return needCancel
@@ -55,16 +54,16 @@ export default function ProductModal({
                     { cancelTitle }
                 </Button>
             </DialogClose>
-            : '';
-    };
+            : ''
+    }
 
     const FooterDom = () => {
         return needConfirm || needCancel
-            ?   <DialogFooter>
-                    { ConfirmBtn() }
-                    { CancelBtn() }
+            ? <DialogFooter>
+                { ConfirmBtn() }
+                { CancelBtn() }
             </DialogFooter>
-            : '';
+            : ''
     }
 
     return (

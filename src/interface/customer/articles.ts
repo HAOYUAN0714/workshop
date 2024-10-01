@@ -1,4 +1,4 @@
-import { optionProps } from '@/api/base/request';
+import { optionProps } from '@/api/base/request'
 
 interface getArticleListInterface extends optionProps {
     page: string

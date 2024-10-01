@@ -1,49 +1,48 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate, NavLink } from "react-router-dom";
-import { getOrderDetail } from "@/api/customer/orders";
-import { payOrder } from "@/api/customer/pay";
-import { Button } from "@/components/ui/button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTruck } from "@fortawesome/free-solid-svg-icons";
-import { Orders as OrderInterface, createOrders } from "@/interface/base/orders"
-import { useAlert } from "@/hook/useAlert";
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { getOrderDetail } from '@/api/customer/orders'
+import { payOrder } from '@/api/customer/pay'
+import { Button } from '@/components/ui/button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTruck } from '@fortawesome/free-solid-svg-icons'
+import { Orders as OrderInterface, createOrders } from '@/interface/base/orders'
+import { useAlert } from '@/hook/useAlert'
 
-export default function Payment() {
-    const navigate = useNavigate();
-    const showAlert = useAlert();
-    const [orderInfo, setOrderInfo] = useState<OrderInterface>(createOrders());
-    const [paymentMethod, setPaymentMethod] = useState('');
-    const { id: orderId = '' } = useParams();
+export default function Payment () {
+    const navigate = useNavigate()
+    const showAlert = useAlert()
+    const [orderInfo, setOrderInfo] = useState<OrderInterface>(createOrders())
+    const [paymentMethod, setPaymentMethod] = useState('')
+    const { id: orderId = '' } = useParams()
 
-    const submitPay = async() => {
-        const res = await payOrder({ path: orderId });
+    const submitPay = async () => {
+        const res = await payOrder({ path: orderId })
 
         if (!res?.success) {
-            showAlert('error', res.message);
-            return;
+            showAlert('error', res.message)
+            return
         }
 
-        navigate(`/order/${ orderId }`, { replace: true });
-    };
+        navigate(`/order/${orderId}`, { replace: true })
+    }
 
     useEffect(() => {
         if (!orderId) {
-            navigate('/');
-            return;
+            navigate('/')
+            return
         }
 
-        (async() => {
-            const res = await getOrderDetail({ path: orderId });
+        (async () => {
+            const res = await getOrderDetail({ path: orderId })
 
             if (!res?.success) {
-                navigate('/');
-                return;
+                navigate('/')
+                return
             }
-        
-            setOrderInfo(res.order);
-        })();
 
-    }, []);
+            setOrderInfo(res.order)
+        })()
+    }, [])
     return (
         <div id="cart-root" className='flex flex-1 justify-center bg-overlay'>
             <div className="flex-col w-[576px] px-12 py-4 bg-card">
@@ -87,5 +86,5 @@ export default function Payment() {
                 </Button>
             </div>
         </div>
-    );
+    )
 }

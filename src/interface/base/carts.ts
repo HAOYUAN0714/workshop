@@ -1,4 +1,4 @@
-import { Coupon } from './coupons';
+import { Coupon } from './coupons'
 
 interface CartProduct {
     category: string,

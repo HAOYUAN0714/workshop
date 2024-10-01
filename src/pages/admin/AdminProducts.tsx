@@ -1,28 +1,28 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from 'react-redux';
-import { useAlert } from "@/hook/useAlert";
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useAlert } from '@/hook/useAlert'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import NoDataHint from '@/components/common/noDataHint';
-import PageSet from "@/components/common/pageSet";
-import { addLoading, removeLoading } from '@/redux/common/loadingSlice';
-import ProductModal from "@/components/admin/modal/ProductModal";
-import { Switch } from "@/components/ui/switch"
-import { Button } from "@/components/ui/button"
-import { getProductList, updateProduct, getAllProduct } from "@/api/admin/products"
-import { Product as productInterface } from "@/interface/base/products"
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from '@/components/ui/table'
+import NoDataHint from '@/components/common/noDataHint'
+import PageSet from '@/components/common/pageSet'
+import { addLoading, removeLoading } from '@/redux/common/loadingSlice'
+import ProductModal from '@/components/admin/modal/ProductModal'
+import { Switch } from '@/components/ui/switch'
+import { Button } from '@/components/ui/button'
+import { getProductList, updateProduct, getAllProduct } from '@/api/admin/products'
+import { Product as productInterface } from '@/interface/base/products'
 
-export default function AdminProducts() {
-    const dispatch = useDispatch();
-    const showAlert = useAlert();
-    const [productList, setProductList] = useState([]);
-    const [isUpdated, setIsUpdated] = useState(false);
+export default function AdminProducts () {
+    const dispatch = useDispatch()
+    const showAlert = useAlert()
+    const [productList, setProductList] = useState([])
+    const [isUpdated, setIsUpdated] = useState(false)
 
     const [pagination, setPagination] = useState({
         category: null,
@@ -30,81 +30,81 @@ export default function AdminProducts() {
         has_next: false,
         has_pre: false,
         total_pages: 1,
-        pageArray: [1],
-    });
+        pageArray: [1]
+    })
 
-    const [productFilter, setProductFilter] = useState({ page: '1', category: '' });
-    const [editProductInfo, setEditProductInfo] = useState({});
-    const [modalType, setModalType] = useState('');
-    const [categoryList, setCategoryList] = useState<string[]>([]); // 分類列表
+    const [productFilter, setProductFilter] = useState({ page: '1', category: '' })
+    const [editProductInfo, setEditProductInfo] = useState({})
+    const [modalType, setModalType] = useState('')
+    const [categoryList, setCategoryList] = useState<string[]>([]) // 分類列表
 
     // 從 productList 更新分類
-    const updateCategoryList = async() => {
+    const updateCategoryList = async () => {
         // 取得全部商品列表 , 只有在初始化時或者新增的商品中出現新的類別才做更新
-        const res = await getAllProduct();
-        const allProductList = Object.values(res.products) as productInterface[];
+        const res = await getAllProduct()
+        const allProductList = Object.values(res.products) as productInterface[]
 
         if (res.success) {
-            const categoryList = allProductList.map((product) => product.category);
-            setCategoryList(Array.from(new Set(categoryList)));
+            const categoryList = allProductList.map((product) => product.category)
+            setCategoryList(Array.from(new Set(categoryList)))
         }
-    };
+    }
 
     // 更新商品列表
     const updateProductList = async () => {
-        const loadingKey = new Date().getTime().toString();
-        dispatch(addLoading(loadingKey));
+        const loadingKey = new Date().getTime().toString()
+        dispatch(addLoading(loadingKey))
 
-        const productRes = await getProductList({ params: productFilter});
+        const productRes = await getProductList({ params: productFilter })
 
         if (productRes.success) {
-            setProductList(productRes.products);
-            const pageArray = Array.from({ length: pagination.total_pages }, (_, i) => i + 1);
-            setPagination({ ...productRes.pagination, pageArray });
+            setProductList(productRes.products)
+            const pageArray = Array.from({ length: pagination.total_pages }, (_, i) => i + 1)
+            setPagination({ ...productRes.pagination, pageArray })
         }
 
-        setIsUpdated(true);
-        dispatch(removeLoading(loadingKey));
-    };
+        setIsUpdated(true)
+        dispatch(removeLoading(loadingKey))
+    }
 
     // 啟用/關閉 個別商品
     const switchProductEnable = async (productInfo: productInterface) => {
-        const loadingKey = new Date().getTime().toString();
-        dispatch(addLoading(loadingKey));
+        const loadingKey = new Date().getTime().toString()
+        dispatch(addLoading(loadingKey))
 
-        const { id: prodcutId = '', ...newProductInfo } = productInfo;
+        const { id: prodcutId = '', ...newProductInfo } = productInfo
 
         // 商邊開關
-        newProductInfo.is_enabled =  Number(!newProductInfo.is_enabled); 
-        
-        const updateRes = await updateProduct({ params: { data: newProductInfo }, path: prodcutId });
+        newProductInfo.is_enabled = Number(!newProductInfo.is_enabled)
+
+        const updateRes = await updateProduct({ params: { data: newProductInfo }, path: prodcutId })
         // 更新成功後重新取得商品列表
-        updateRes?.success && await updateProductList();
+        updateRes?.success && await updateProductList()
 
-        dispatch(removeLoading(loadingKey));
+        dispatch(removeLoading(loadingKey))
 
-        showAlert(updateRes?.success ? 'success' : 'error', updateRes.message || '商品更新失敗');
-    };
+        showAlert(updateRes?.success ? 'success' : 'error', updateRes.message || '商品更新失敗')
+    }
 
     // 切換分頁
     const handlePageChange = (page: number) => {
-        setProductFilter({ ...productFilter, page: page.toString() });
-    };
+        setProductFilter({ ...productFilter, page: page.toString() })
+    }
 
     // 初始化更新一次分類列表
     useEffect(() => {
-        updateCategoryList();
-    }, []);
+        updateCategoryList()
+    }, [])
 
     // 如果 篩選資料 有變動，則重新取得商品列表
     useEffect(() => {
-        updateProductList();
+        updateProductList()
     }, [productFilter])
 
     // 切換 modal 流程
-    const modalTriggerHandler = (type: string, productInfo?: productInterface ) => {
-        setEditProductInfo(type === 'edit' || type === 'delete' ? { ...productInfo } : {});
-        setModalType(type);
+    const modalTriggerHandler = (type: string, productInfo?: productInterface) => {
+        setEditProductInfo(type === 'edit' || type === 'delete' ? { ...productInfo } : {})
+        setModalType(type)
     }
 
     return (
@@ -136,42 +136,42 @@ export default function AdminProducts() {
                         productList.length === 0 && isUpdated
                             ? <NoDataHint />
                             : <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[150px]">分類</TableHead>
-                                    <TableHead>名稱</TableHead>
-                                    <TableHead className="text-right">原價(NT$)</TableHead>
-                                    <TableHead className="text-right">售價(NT$)</TableHead>
-                                    <TableHead className="w-[100px]">啟用狀態</TableHead>
-                                    <TableHead className="w-[180px]">操作</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {productList.map((productItem: productInterface) => (
-                                    <TableRow key={ productItem.id }>
-                                        <TableCell className="font-medium">{ productItem.category }</TableCell>
-                                        <TableCell>{ productItem.title }</TableCell>
-                                        <TableCell className="text-right">{ productItem.origin_price }</TableCell>
-                                        <TableCell className="text-right">{ productItem.price }</TableCell>
-                                        <TableCell>
-                                            <Switch
-                                                id="themeMode"
-                                                checked={!!productItem.is_enabled}
-                                                onCheckedChange={() => switchProductEnable(productItem)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button className="mr-2" type="button" onClick={() => modalTriggerHandler('edit', productItem)}>
-                                                編輯
-                                            </Button>
-                                            <Button type="button" variant="destructive" onClick={() => modalTriggerHandler('delete', productItem)}>
-                                                刪除
-                                            </Button>
-                                        </TableCell>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[150px]">分類</TableHead>
+                                        <TableHead>名稱</TableHead>
+                                        <TableHead className="text-right">原價(NT$)</TableHead>
+                                        <TableHead className="text-right">售價(NT$)</TableHead>
+                                        <TableHead className="w-[100px]">啟用狀態</TableHead>
+                                        <TableHead className="w-[180px]">操作</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {productList.map((productItem: productInterface) => (
+                                        <TableRow key={ productItem.id }>
+                                            <TableCell className="font-medium">{ productItem.category }</TableCell>
+                                            <TableCell>{ productItem.title }</TableCell>
+                                            <TableCell className="text-right">{ productItem.origin_price }</TableCell>
+                                            <TableCell className="text-right">{ productItem.price }</TableCell>
+                                            <TableCell>
+                                                <Switch
+                                                    id="themeMode"
+                                                    checked={!!productItem.is_enabled}
+                                                    onCheckedChange={() => switchProductEnable(productItem)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button className="mr-2" type="button" onClick={() => modalTriggerHandler('edit', productItem)}>
+                                                編輯
+                                                </Button>
+                                                <Button type="button" variant="destructive" onClick={() => modalTriggerHandler('delete', productItem)}>
+                                                刪除
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                     }
                 </div>
                 {/* 分頁 */}
@@ -184,5 +184,5 @@ export default function AdminProducts() {
                 </div>
             </div>
         </div>
-    );
+    )
 }

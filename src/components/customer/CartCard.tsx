@@ -1,47 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
+    Card,
+    CardContent,
+    CardDescription,
+    CardTitle
+} from '@/components/ui/card'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Cart as CartInterface } from "@/interface/base/carts";
-import { Cross1Icon } from "@radix-ui/react-icons";
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from '@/components/ui/select'
+import { Cart as CartInterface } from '@/interface/base/carts'
+import { Cross1Icon } from '@radix-ui/react-icons'
 
 interface CartCardProps {
     cartInfo: CartInterface,
     className?: string,
-    isLoading: Boolean,
+    isLoading: boolean,
     handleSelect: (cartInfo: CartInterface, qty: number) => void,
     handleDelete: (id: string) => void
 }
 
-export default function CartCard({
+export default function CartCard ({
     cartInfo,
     className,
     isLoading,
     handleSelect,
-    handleDelete,
+    handleDelete
 }: CartCardProps) {
-    const [selectList, setSelectList] = useState(Array.from({ length: 10 }, (v, i) => i + 1));
+    const [selectList, setSelectList] = useState(Array.from({ length: 10 }, (v, i) => i + 1))
 
     const updateSelect = (selectVal: string) => {
-        handleSelect(cartInfo , Number(selectVal))
-    };
+        handleSelect(cartInfo, Number(selectVal))
+    }
 
     useEffect(() => {
         // 設定選擇數量的選項 , 如果超過 10 可選最大數量 + 3
         cartInfo.qty > 10
-            ?   setSelectList(Array.from({ length: cartInfo.qty + 3 }, (v, i) => i + 1))
-            :   setSelectList(Array.from({ length: 10 }, (v, i) => i + 1));
-    }), [cartInfo];
+            ? setSelectList(Array.from({ length: cartInfo.qty + 3 }, (_, i) => i + 1))
+            : setSelectList(Array.from({ length: 10 }, (_, i) => i + 1))
+    }, [cartInfo])
 
     return <Card className={`w-full h-[150px] rounded-md ${className}`}>
         <CardContent className="relative flex w-full h-full p-0">

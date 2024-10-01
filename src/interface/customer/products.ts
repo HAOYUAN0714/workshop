@@ -1,4 +1,4 @@
-import { optionProps } from '@/api/base/request';
+import { optionProps } from '@/api/base/request'
 
 interface getProductListInterface extends optionProps {
     params: {
@@ -8,7 +8,7 @@ interface getProductListInterface extends optionProps {
 }
 
 interface getProductDetailInterface extends optionProps {
-    path: string
+path: string
 }
 
 export type {

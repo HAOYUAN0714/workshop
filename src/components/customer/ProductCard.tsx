@@ -1,28 +1,27 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from 'react-router-dom'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
-import { Product as productInterface } from "@/interface/base/products";
+    Card,
+    CardContent,
+    CardDescription,
+    CardTitle
+} from '@/components/ui/card'
+import { Product as productInterface } from '@/interface/base/products'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
 
 interface ProductCardProps {
     productInfo: productInterface,
     className?: string,
-    isLoading: Boolean,
+    isLoading: boolean,
     updateCartList: () => void,
 }
 
-export default function ProductCard({
+export default function ProductCard ({
     productInfo,
     className,
     isLoading,
-    updateCartList,
+    updateCartList
 }: ProductCardProps) {
-
     return <Card className={`w-[300px] h-[150px] rounded-md shadow-md ${className}`}>
         <CardContent className="relative flex flex-none w-full h-full p-0">
             <NavLink
@@ -43,25 +42,25 @@ export default function ProductCard({
                     </div>
                 }
             </NavLink>
-            <div 
+            <div
                 className={`
                     absolute bottom-2 right-4 
                     flex justify-center items-center 
                     rounded-full w-10 h-10 shadow-md
                     bg-background text-success text-2xl
                     
-                    ${ isLoading 
-                        ?   'cursor-not-allowed'
-                        :   'hover:bg-success hover:text-success-foreground cursor-pointer'
-                    }
+                    ${isLoading
+        ? 'cursor-not-allowed'
+        : 'hover:bg-success hover:text-success-foreground cursor-pointer'
+}
                 `}
                 onClick={() => !isLoading && updateCartList()}
             >
                 { isLoading
-                    ?   <div className="animate-spin h-5 w-5 border-2 border-success border-b-transparent rounded-full" />
-                    :   <FontAwesomeIcon className="text-base" icon={faCartShopping}/>    
+                    ? <div className="animate-spin h-5 w-5 border-2 border-success border-b-transparent rounded-full" />
+                    : <FontAwesomeIcon className="text-base" icon={faCartShopping}/>
                 }
-                
+
             </div>
         </CardContent>
     </Card>

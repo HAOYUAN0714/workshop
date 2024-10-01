@@ -1,47 +1,47 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { logout } from '@/api/admin/user';
+import { logout } from '@/api/admin/user'
 import {
     CubeIcon,
     ReaderIcon,
     BookmarkFilledIcon
-} from "@radix-ui/react-icons"
+} from '@radix-ui/react-icons'
 import { useDispatch, useSelector } from 'react-redux'
-import FullLoading from '@/components/common/fullLoading';
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { RootState } from '@/redux/store';
-import { setTheme } from '@/redux/common/userSettingSlice';
-import { loadingQueue } from '@/redux/common/loadingSlice';
-import { useState, useEffect } from 'react';
-import { alertInfoArray } from '@/redux/common/alertSlice';
-import AlertDestructive from '@/components/common/alertDestructive';
+import FullLoading from '@/components/common/fullLoading'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { RootState } from '@/redux/store'
+import { setTheme } from '@/redux/common/userSettingSlice'
+import { loadingQueue } from '@/redux/common/loadingSlice'
+import { useState, useEffect } from 'react'
+import { alertInfoArray } from '@/redux/common/alertSlice'
+import AlertDestructive from '@/components/common/alertDestructive'
 
-export default function Dashboard() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const loadingState = useSelector(loadingQueue);
-    const alertList = useSelector(alertInfoArray);
-    const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
+export default function Dashboard () {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const loadingState = useSelector(loadingQueue)
+    const alertList = useSelector(alertInfoArray)
+    const theme = useSelector((state: RootState) => state.userSettingSlice.theme)
 
     const handleThemeSwitch = () => {
-        dispatch(setTheme(theme === 'dark' ? '' : 'dark'));
+        dispatch(setTheme(theme === 'dark' ? '' : 'dark'))
     }
 
     const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("hexToken="))
-        ?.split("=")[1] || '';
+        .split('; ')
+        .find((row) => row.startsWith('hexToken='))
+        ?.split('=')[1] || ''
 
     const logoutFunc = () => {
         logout().then(() => {
-            navigate('/admin/login');
-        });
+            navigate('/admin/login')
+        })
     }
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        setIsLoading(!!Object.keys(loadingState).length);
+        setIsLoading(!!Object.keys(loadingState).length)
     }, [loadingState])
 
     const sideMenu = [
@@ -60,9 +60,9 @@ export default function Dashboard() {
             path: '/admin/orders',
             icon: <ReaderIcon />
         }
-    ];
+    ]
 
-    const linkClass = 'flex justify-center items-center w-full p-4 text-sm';
+    const linkClass = 'flex justify-center items-center w-full p-4 text-sm'
 
     return (
         <div id="admin-dashboard" className="w-full flex flex-col h-screen bg-background">
@@ -97,7 +97,7 @@ export default function Dashboard() {
                     </button>
                 </div>
             </header>
-            
+
             <div className="flex flex-1">
                 {/* 左 Menu */}
                 <nav className="flex-none w-48 bg-muted">
@@ -113,7 +113,7 @@ export default function Dashboard() {
                                             { menuItem.icon }
                                         </div>
                                         <div className='flex-1 pl-1'>
-                                            { menuItem.title }    
+                                            { menuItem.title }
                                         </div>
                                     </NavLink>
                                 </li>
@@ -123,9 +123,9 @@ export default function Dashboard() {
                 </nav>
                 {/* 右 項目分頁 */}
                 <main className="flex-1 bg-background text-foreground">
-                   { token && <Outlet />}
+                    { token && <Outlet />}
                 </main>
             </div>
         </div>
-    );
+    )
 }

@@ -1,58 +1,50 @@
-import { useState, useEffect } from 'react';
-import { useAlert } from "@/hook/useAlert";
+import { useEffect } from 'react'
+import { useAlert } from '@/hook/useAlert'
 import { Outlet, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import FullLoading from '@/components/common/fullLoading';
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { RootState } from '@/redux/store';
-import { setTheme } from '@/redux/common/userSettingSlice';
-import { updateCart } from '@/redux/customer/cartSlice';
-import { loadingQueue, addLoading, removeLoading } from '@/redux/common/loadingSlice';
-import { cartData } from '@/redux/customer/cartSlice';
-import { alertInfoArray } from '@/redux/common/alertSlice';
-import AlertDestructive from '@/components/common/alertDestructive';
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { RootState } from '@/redux/store'
+import { setTheme } from '@/redux/common/userSettingSlice'
+import { updateCart, cartData } from '@/redux/customer/cartSlice'
+import { addLoading, removeLoading } from '@/redux/common/loadingSlice'
+import { alertInfoArray } from '@/redux/common/alertSlice'
+import AlertDestructive from '@/components/common/alertDestructive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import { getCart } from '@/api/customer/cart';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
+import { getCart } from '@/api/customer/cart'
 
-export default function Dashboard() {
-    const dispatch = useDispatch();
-    const showAlert = useAlert();
-    const loadingState = useSelector(loadingQueue);
-    const cartState = useSelector(cartData);
-    const alertList = useSelector(alertInfoArray);
-    const theme = useSelector((state: RootState) => state.userSettingSlice.theme);
-    const [isLoading, setIsLoading] = useState(false);
+export default function Dashboard () {
+    const dispatch = useDispatch()
+    const showAlert = useAlert()
+    const cartState = useSelector(cartData)
+    const alertList = useSelector(alertInfoArray)
+    const theme = useSelector((state: RootState) => state.userSettingSlice.theme)
 
     const handleThemeSwitch = () => {
-        dispatch(setTheme(theme === 'dark' ? '' : 'dark'));
+        dispatch(setTheme(theme === 'dark' ? '' : 'dark'))
     }
 
     // 更新購物車
-    const updateCartList = async() => {
-        const loadingKey = new Date().getTime().toString();
-        dispatch(addLoading(loadingKey));
+    const updateCartList = async () => {
+        const loadingKey = new Date().getTime().toString()
+        dispatch(addLoading(loadingKey))
 
-        const cartRes = await getCart({});
+        const cartRes = await getCart({})
 
         if (!cartRes?.success) {
-            showAlert('error', cartRes?.message || '購物車更新失敗');
-            dispatch(removeLoading(loadingKey));
-            return;
+            showAlert('error', cartRes?.message || '購物車更新失敗')
+            dispatch(removeLoading(loadingKey))
+            return
         }
 
-        dispatch(updateCart(cartRes.data));
-        dispatch(removeLoading(loadingKey));
-    };
+        dispatch(updateCart(cartRes.data))
+        dispatch(removeLoading(loadingKey))
+    }
 
     useEffect(() => {
-        setIsLoading(!!Object.keys(loadingState).length);
-    }, [loadingState])
-
-    useEffect(() => {
-        updateCartList();
-    }, []);
+        updateCartList()
+    }, [])
 
     return (
         <div id="front-container" className="w-full min-h-lvh flex flex-col  bg-overlay">
@@ -89,8 +81,8 @@ export default function Dashboard() {
                             <NavLink to={'/cart'} >
                                 <FontAwesomeIcon icon={faCartShopping} />
                             </NavLink>
-                            { cartState?.carts?.length > 0
-                                && <div
+                            { cartState?.carts?.length > 0 &&
+                                <div
                                     className="
                                         absolute bottom-0 right-0 translate-x-2
                                         flex justify-center items-center
@@ -98,7 +90,7 @@ export default function Dashboard() {
                                         bg-error text-error-foreground
                                         text-xs
                                     "
-                                    >
+                                >
                                     {cartState?.carts?.length}
                                 </div>
                             }
@@ -110,5 +102,5 @@ export default function Dashboard() {
                 { <Outlet /> }
             </div>
         </div>
-    );
+    )
 }

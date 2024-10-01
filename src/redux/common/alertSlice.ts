@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from '../store'
 
 interface alertInfo {
     id: string
@@ -9,11 +9,11 @@ interface alertInfo {
 }
 
 interface stateInterface {
-    alertInfoArray:  Array<alertInfo>
+    alertInfoArray: Array<alertInfo>
 }
 
 const initialState: stateInterface = {
-    alertInfoArray: [],
+    alertInfoArray: []
 }
 
 export const alertSlice = createSlice({
@@ -21,16 +21,16 @@ export const alertSlice = createSlice({
     initialState,
     reducers: {
         addAlert: (state, action: PayloadAction<alertInfo>) => {
-            state.alertInfoArray.push(action.payload);
+            state.alertInfoArray.push(action.payload)
         },
         removeAlert: (state, action: PayloadAction<string>) => {
-            state.alertInfoArray = state.alertInfoArray.filter((alert) => alert.id !== action.payload);
+            state.alertInfoArray = state.alertInfoArray.filter((alert) => alert.id !== action.payload)
         }
-    },
+    }
 })
 
-export const { addAlert, removeAlert } = alertSlice.actions;
+export const { addAlert, removeAlert } = alertSlice.actions
 
-export const alertInfoArray = (state: RootState) => state.alertSlice.alertInfoArray;
+export const alertInfoArray = (state: RootState) => state.alertSlice.alertInfoArray
 
-export default alertSlice.reducer;
+export default alertSlice.reducer

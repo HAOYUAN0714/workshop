@@ -1,4 +1,4 @@
-import { optionProps } from '@/api/base/request';
+import { optionProps } from '@/api/base/request'
 
 interface getOrderListInterface extends optionProps {
     params: {
@@ -10,7 +10,7 @@ interface updateOrderInterface extends optionProps {
     params: {
         data: {
             create_at: EpochTimeStamp | DOMHighResTimeStamp,
-            is_paid: Boolean,
+            is_paid: boolean,
             message: string,
             num: number,
             products: {

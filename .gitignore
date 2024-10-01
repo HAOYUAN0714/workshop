@@ -1,1 +1,18 @@
 node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+public/logo.zip
+components.d.ts
+auto-imports.d.ts
+public/*.psd
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn.lock
+yarn-error.log
+pnpm-debug.log*
+pnpm-lock.yaml
+package-lock.json

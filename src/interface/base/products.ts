@@ -27,8 +27,8 @@ export const createProduct = (): CustomerProductInterface => {
         unit: '',
         imageUrl: '',
         imagesUrl: []
-    };
-};
+    }
+}
 
 interface Product {
     title: string,

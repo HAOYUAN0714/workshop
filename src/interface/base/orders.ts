@@ -11,7 +11,7 @@ interface OrderProductInterface {
 interface Orders {
     create_at: EpochTimeStamp | DOMHighResTimeStamp, // 訂單建立時間
     id: string, // 訂單 ID
-    is_paid: Boolean, // 是否已付款
+    is_paid: boolean, // 是否已付款
     message?: string, // 訂單留言
     total: number, // 訂單總金額
     products: {
@@ -41,8 +41,8 @@ export const createOrders = (): Orders => { // 建立訂單預設值
             name: '',
             tel: ''
         }
-    };
-};
+    }
+}
 
 export type {
     Orders,

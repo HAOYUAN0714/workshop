@@ -1,8 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
-import userSettingSlice from './common/userSettingSlice';
-import alertSlice from './common/alertSlice';
-import loadingSlice from './common/loadingSlice';
-import cartSlice from './customer/cartSlice';
+import { configureStore } from '@reduxjs/toolkit'
+import userSettingSlice from './common/userSettingSlice'
+import alertSlice from './common/alertSlice'
+import loadingSlice from './common/loadingSlice'
+import cartSlice from './customer/cartSlice'
 
 export const store = configureStore({
     reducer: {
@@ -12,7 +12,6 @@ export const store = configureStore({
         cartSlice
     }
 })
-
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>

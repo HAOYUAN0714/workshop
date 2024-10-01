@@ -1,6 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from './store';
-
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from './store'
 
 interface TestItem {
     id: string;
@@ -23,28 +22,28 @@ const initialState: TestState = {
     testNumber: 0,
     testObj: {
         name: '',
-        age: 0,
+        age: 0
     }
-};
+}
 
 export const testSlice = createSlice({
     name: 'testSlice',
     initialState,
     reducers: {
         setTestList: (state, action: PayloadAction<TestItem[]>) => {
-            state.testList = action.payload;
+            state.testList = action.payload
         },
         setTestNumber: (state, action: PayloadAction<number>) => {
-            state.testNumber = action.payload;
+            state.testNumber = action.payload
         },
         setTestObj: (state, action: PayloadAction<TestState['testObj']>) => {
-            state.testObj = action.payload;
-        },
-    },
+            state.testObj = action.payload
+        }
+    }
 })
 
-export const { setTestList, setTestNumber, setTestObj } = testSlice.actions;
+export const { setTestList, setTestNumber, setTestObj } = testSlice.actions
 
-export const selectTestList = (state: RootState) => state.testSlice.testList;
+export const selectTestList = (state: RootState) => state.testSlice.testList
 
-export default testSlice.reducer;
+export default testSlice.reducer
